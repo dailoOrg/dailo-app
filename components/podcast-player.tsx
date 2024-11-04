@@ -1,64 +1,132 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Play, Pause, SkipBack, SkipForward, Volume2, Mic } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
+import { useOpenAI } from '@/hooks/useOpenAI'
+import { podcastQAPrompt } from '@/prompts/podcastQAPrompt'
+import { podcastTranscript } from '@/data/podcastTranscript'
 
-export function PodcastPlayer() {
+interface QAResponse {
+  answer: string;
+  confidence: number;
+}
+
+interface PodcastPlayerProps {
+  title: string;
+  audioSrc: string;
+}
+
+export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
   const [question, setQuestion] = useState('')
   const [aiResponse, setAiResponse] = useState('')
   const [showAiResponse, setShowAiResponse] = useState(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const { result, loading, error, generateResponse } = useOpenAI<QAResponse>();
 
+  // Handle audio play/pause
   const togglePlayPause = () => {
-    setIsPlaying(!isPlaying)
-    if (isPlaying) {
-      setShowAiResponse(false)
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause()
+      } else {
+        audioRef.current.play()
+      }
+      setIsPlaying(!isPlaying)
     }
   }
 
-  const handleAskQuestion = () => {
-    setIsPlaying(false)
-    setShowAiResponse(true)
-    // Simulate AI processing time
-    setTimeout(() => {
-      setAiResponse(`Here's an AI-generated response to your question: "${question}"`)
-    }, 1500)
+  // Update time display
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime)
+    }
   }
+
+  // Set duration when audio loads
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration)
+    }
+  }
+
+  // Handle slider change
+  const handleSliderChange = (value: number[]) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = value[0]
+      setCurrentTime(value[0])
+    }
+  }
+
+  // Skip forward/backward
+  const handleSkip = (seconds: number) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime += seconds
+    }
+  }
+
+  const handleAskQuestion = async () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    setIsPlaying(false);
+    setShowAiResponse(true);
+
+    const prompt = {
+      ...podcastQAPrompt,
+      userPrompt: podcastQAPrompt.userPrompt(podcastTranscript, question)
+    };
+
+    await generateResponse(prompt);
+  };
 
   const resumePodcast = () => {
     setShowAiResponse(false)
-    setIsPlaying(true)
+    if (audioRef.current) {
+      audioRef.current.play()
+      setIsPlaying(true)
+    }
   }
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
-      <h1 className="text-2xl font-bold mb-4">AI-Enhanced Podcast Player</h1>
+      <h1 className="text-2xl font-bold mb-4">{title}</h1>
+      
+      {/* Hidden audio element */}
+      <audio
+        ref={audioRef}
+        src={audioSrc}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onEnded={() => setIsPlaying(false)}
+      />
       
       {/* Podcast Player */}
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm">{formatTime(currentTime)}</span>
-          <span className="text-sm">30:00</span>
+          <span className="text-sm">{formatTime(duration)}</span>
         </div>
         <Slider
           value={[currentTime]}
-          max={1800}
+          max={duration}
           step={1}
-          onValueChange={(value) => setCurrentTime(value[0])}
+          onValueChange={handleSliderChange}
           className="mb-4"
         />
         <div className="flex justify-center items-center space-x-4">
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" onClick={() => handleSkip(-10)}>
             <SkipBack className="h-4 w-4" />
           </Button>
           <Button size="icon" onClick={togglePlayPause}>
             {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
           </Button>
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" onClick={() => handleSkip(10)}>
             <SkipForward className="h-4 w-4" />
           </Button>
           <Button variant="outline" size="icon">
@@ -87,7 +155,18 @@ export function PodcastPlayer() {
       {showAiResponse && (
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-2">AI Response:</h2>
-          <p className="bg-gray-100 p-3 rounded">{aiResponse || 'Generating response...'}</p>
+          {loading ? (
+            <p className="bg-gray-100 p-3 rounded">Generating response...</p>
+          ) : error ? (
+            <p className="bg-red-100 p-3 rounded text-red-600">{error}</p>
+          ) : result ? (
+            <div className="bg-gray-100 p-3 rounded">
+              <p>{result.answer}</p>
+              <p className="text-sm text-gray-500 mt-2">
+                Confidence: {Math.round(result.confidence * 100)}%
+              </p>
+            </div>
+          ) : null}
           <Button onClick={resumePodcast} className="mt-2">
             Resume Podcast
           </Button>
