@@ -8,6 +8,7 @@ import { Slider } from "@/components/ui/slider"
 import { useOpenAI } from '@/hooks/useOpenAI'
 import { podcastQAPrompt } from '@/prompts/podcastQAPrompt'
 import { podcastTranscript } from '@/data/podcastTranscript'
+import AudioInput from './AudioInput'
 
 interface QAResponse {
   answer: string;
@@ -94,6 +95,11 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
     }
   }
 
+  const handleTranscription = (text: string) => {
+    setQuestion(text);
+    handleAskQuestion();
+  };
+
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold mb-4">{title}</h1>
@@ -139,17 +145,23 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
       
       {/* Question Input */}
       <div className="mb-6">
-        <div className="flex space-x-2">
-          <Input
-            type="text"
-            placeholder="Ask a question..."
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-          />
-          <Button onClick={handleAskQuestion}>
-            <Mic className="h-4 w-4 mr-2" />
-            Ask
-          </Button>
+        <div className="flex flex-col space-y-2">
+          <div className="flex space-x-2">
+            <Input
+              type="text"
+              placeholder="Ask a question..."
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+            />
+            <Button onClick={handleAskQuestion}>
+              <Mic className="h-4 w-4 mr-2" />
+              Ask
+            </Button>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="text-sm text-gray-500">Or ask with voice:</span>
+            <AudioInput onTranscription={handleTranscription} />
+          </div>
         </div>
       </div>
       
