@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Play, Pause, SkipBack, SkipForward, Volume2, Mic } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -115,6 +115,25 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
     setIsRecording(false);
   };
 
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      // Try to get duration immediately if available
+      if (audio.duration) {
+        setDuration(audio.duration);
+      }
+      
+      // Also set up a timeout to check again after a short delay
+      const timer = setTimeout(() => {
+        if (audio.duration) {
+          setDuration(audio.duration);
+        }
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold mb-4">{title}</h1>
@@ -123,6 +142,7 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
       <audio
         ref={audioRef}
         src={audioSrc}
+        preload="metadata"
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={() => setIsPlaying(false)}
