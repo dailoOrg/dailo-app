@@ -9,6 +9,7 @@ import { useOpenAI } from '@/hooks/useOpenAI'
 import { podcastQAPrompt } from '@/prompts/podcastQAPrompt'
 import { podcastTranscript } from '@/data/podcastTranscript'
 import AudioInput from './AudioInput'
+import AudioOutput from './AudioOutput'
 
 interface QAResponse {
   answer: string;
@@ -210,7 +211,10 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
       {/* AI Response */}
       {showAiResponse && (
         <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">AI Response:</h2>
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-lg font-semibold">AI Response:</h2>
+            {result && <AudioOutput text={result.answer} />}
+          </div>
           {loading ? (
             <p className="bg-gray-100 p-3 rounded">Generating response...</p>
           ) : error ? (
