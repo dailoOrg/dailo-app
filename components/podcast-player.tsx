@@ -5,7 +5,7 @@ import { Play, Pause, SkipBack, SkipForward, Volume2, Mic } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
-import { useOpenAI } from '@/hooks/useOpenAI'
+import { useOpenAIStream } from '@/hooks/useOpenAIStream'
 import { podcastQAPrompt } from '@/prompts/podcastQAPrompt'
 import { podcastTranscript } from '@/data/podcastTranscript'
 import AudioInput from './AudioInput'
@@ -29,7 +29,7 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
   const [aiResponse, setAiResponse] = useState('')
   const [showAiResponse, setShowAiResponse] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
-  const { result, loading, error, generateResponse } = useOpenAI<QAResponse>();
+  const { result, loading, error, partialResult, generateStreamingResponse, messages } = useOpenAIStream<QAResponse>();
   const [isRecording, setIsRecording] = useState(false);
   const [transcribedText, setTranscribedText] = useState('');
 
@@ -87,7 +87,7 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
       userPrompt: podcastQAPrompt.userPrompt(podcastTranscript, text)
     };
 
-    await generateResponse(prompt);
+    await generateStreamingResponse(prompt);
   };
 
   const resumePodcast = () => {
@@ -216,12 +216,16 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
             {result && <AudioOutput text={result.answer} />}
           </div>
           {loading ? (
-            <p className="bg-gray-100 p-3 rounded">Generating response...</p>
+            <div className="bg-gray-100 p-3 rounded">
+              <p className="whitespace-pre-wrap">
+                {messages[messages.length - 1]?.content || 'Generating response...'}
+              </p>
+            </div>
           ) : error ? (
             <p className="bg-red-100 p-3 rounded text-red-600">{error}</p>
           ) : result ? (
             <div className="bg-gray-100 p-3 rounded">
-              <p>{result.answer}</p>
+              <p className="whitespace-pre-wrap">{result.answer}</p>
               <p className="text-sm text-gray-500 mt-2">
                 Confidence: {Math.round(result.confidence * 100)}%
               </p>
