@@ -51,9 +51,10 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
   // Set duration when audio loads
   const handleLoadedMetadata = () => {
     if (audioRef.current) {
-      setDuration(audioRef.current.duration)
+      console.log('Audio duration:', audioRef.current.duration);
+      setDuration(audioRef.current.duration);
     }
-  }
+  };
 
   // Handle slider change
   const handleSliderChange = (value: number[]) => {
@@ -114,8 +115,9 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
         </div>
         <Slider
           value={[currentTime]}
-          max={duration}
-          step={1}
+          min={0}
+          max={duration || 100}
+          step={0.1}
           onValueChange={handleSliderChange}
           className="mb-4"
         />
