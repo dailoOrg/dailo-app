@@ -29,6 +29,8 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
   const [showAiResponse, setShowAiResponse] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const { result, loading, error, generateResponse } = useOpenAI<QAResponse>();
+  const [isRecording, setIsRecording] = useState(false);
+  const [transcribedText, setTranscribedText] = useState('');
 
   // Handle audio play/pause
   const togglePlayPause = () => {
@@ -72,7 +74,7 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
     }
   }
 
-  const handleAskQuestion = async () => {
+  const handleAskQuestion = async (text: string) => {
     if (audioRef.current) {
       audioRef.current.pause();
     }
@@ -81,7 +83,7 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
 
     const prompt = {
       ...podcastQAPrompt,
-      userPrompt: podcastQAPrompt.userPrompt(podcastTranscript, question)
+      userPrompt: podcastQAPrompt.userPrompt(podcastTranscript, text)
     };
 
     await generateResponse(prompt);
@@ -96,8 +98,21 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
   }
 
   const handleTranscription = (text: string) => {
-    setQuestion(text);
-    handleAskQuestion();
+    setTranscribedText(text);
+    handleAskQuestion(text);
+  };
+
+  const handleAskClick = () => {
+    if (isRecording) {
+      setIsRecording(false);
+    } else {
+      setTranscribedText('');
+      setIsRecording(true);
+    }
+  };
+
+  const handleRecordingComplete = () => {
+    setIsRecording(false);
   };
 
   return (
@@ -143,26 +158,33 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
         </div>
       </div>
       
-      {/* Question Input */}
+      {/* Voice Input Section */}
       <div className="mb-6">
         <div className="flex flex-col space-y-2">
-          <div className="flex space-x-2">
-            <Input
-              type="text"
-              placeholder="Ask a question..."
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-            />
-            <Button onClick={handleAskQuestion}>
-              <Mic className="h-4 w-4 mr-2" />
-              Ask
-            </Button>
-          </div>
-          <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-500">Or ask with voice:</span>
-            <AudioInput onTranscription={handleTranscription} />
-          </div>
+          <Button 
+            onClick={handleAskClick}
+            className={isRecording ? 'bg-red-500 hover:bg-red-600' : ''}
+          >
+            <Mic className="h-4 w-4 mr-2" />
+            {isRecording ? 'Stop Recording' : 'Ask Question'}
+          </Button>
+          {isRecording && (
+            <span className="text-sm text-red-500 animate-pulse">
+              Recording... Click button to stop
+            </span>
+          )}
+          {transcribedText && !isRecording && (
+            <div className="bg-gray-100 p-3 rounded">
+              <p className="text-sm text-gray-600">Your question:</p>
+              <p>{transcribedText}</p>
+            </div>
+          )}
         </div>
+        <AudioInput 
+          isRecording={isRecording}
+          onTranscription={handleTranscription}
+          onRecordingComplete={handleRecordingComplete}
+        />
       </div>
       
       {/* AI Response */}

@@ -1,7 +1,12 @@
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 
-export default function AudioInput({ onTranscription }: { onTranscription: (text: string) => void }) {
-  const [isRecording, setIsRecording] = useState(false);
+interface AudioInputProps {
+  isRecording: boolean;
+  onTranscription: (text: string) => void;
+  onRecordingComplete: () => void;
+}
+
+export default function AudioInput({ isRecording, onTranscription, onRecordingComplete }: AudioInputProps) {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
@@ -20,18 +25,20 @@ export default function AudioInput({ onTranscription }: { onTranscription: (text
         const audioBlob = new Blob(chunksRef.current, { type: 'audio/mpeg' });
         await handleUpload(audioBlob);
         stream.getTracks().forEach(track => track.stop());
+        onRecordingComplete();
       };
 
       mediaRecorder.start();
-      setIsRecording(true);
     } catch (err) {
       console.error('Error accessing microphone:', err);
+      onRecordingComplete();
     }
   };
 
   const stopRecording = () => {
-    mediaRecorderRef.current?.stop();
-    setIsRecording(false);
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+    }
   };
 
   const handleUpload = async (audioBlob: Blob) => {
@@ -52,19 +59,11 @@ export default function AudioInput({ onTranscription }: { onTranscription: (text
     }
   };
 
-  return (
-    <div className="flex items-center gap-4">
-      <button
-        onClick={isRecording ? stopRecording : startRecording}
-        className={`px-4 py-2 rounded-full ${
-          isRecording 
-            ? 'bg-red-500 hover:bg-red-600' 
-            : 'bg-blue-500 hover:bg-blue-600'
-        } text-white`}
-      >
-        {isRecording ? 'Stop Recording' : 'Start Recording'}
-      </button>
-      {isRecording && <span className="animate-pulse text-red-500">Recording...</span>}
-    </div>
-  );
+  if (isRecording) {
+    startRecording();
+  } else if (mediaRecorderRef.current) {
+    stopRecording();
+  }
+
+  return null;
 } 
