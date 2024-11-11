@@ -5,16 +5,11 @@ import { Play, Pause, SkipBack, SkipForward, Volume2, Mic } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
-import { podcastQAPrompt } from '@/prompts/podcastQAPrompt'
+import { podcastQAStreamPrompt } from '@/prompts/podcastQAStreamPrompt'
 import { podcastTranscript } from '@/data/podcastTranscript'
 import AudioInput from './AudioInput'
 import AudioOutput from './AudioOutput'
 import StreamingAudioOutput from './StreamingAudioOutput'
-
-interface QAResponse {
-  answer: string;
-  confidence: number;
-}
 
 interface PodcastPlayerProps {
   title: string;
@@ -92,8 +87,8 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
         },
         body: JSON.stringify({ 
           prompt: {
-            ...podcastQAPrompt,
-            userPrompt: podcastQAPrompt.userPrompt(podcastTranscript, text)
+            ...podcastQAStreamPrompt,
+            userPrompt: podcastQAStreamPrompt.userPrompt(podcastTranscript, text)
           }
         }),
       });
@@ -101,7 +96,6 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
       if (!response.ok) throw new Error('Stream request failed');
       setShowAiResponse(true);
       
-      // Pass the stream directly to StreamingAudioOutput
       const stream = response.body;
       if (stream) {
         setCurrentStream(stream);
