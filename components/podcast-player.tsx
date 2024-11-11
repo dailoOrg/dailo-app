@@ -220,7 +220,6 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
               stream={loading ? null : (!hasPlayedResponse ? new Response(result?.answer).body : null)}
               onComplete={() => {
                 setHasPlayedResponse(true);
-                resumePodcast();
               }}
             />
           </div>
