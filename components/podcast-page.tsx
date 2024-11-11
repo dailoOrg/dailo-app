@@ -1,24 +1,26 @@
 'use client';
 
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlayCircle } from "lucide-react";
 import podcastData from "@/public/data/podcastData.json";
+import { PodcastPlayer } from './podcast-player';
 
 interface PodcastPageProps {
   podcastId: string;
 }
 
 export function PodcastPage({ podcastId }: PodcastPageProps) {
+  const [selectedEpisode, setSelectedEpisode] = useState<{title: string, audioFile: string} | null>(null);
   const podcast = podcastData.podcasts.find((p) => p.id === podcastId);
 
   if (!podcast) {
     return <div>Podcast not found</div>;
   }
 
-  const handlePlayEpisode = (audioFile: string) => {
-    // TODO: Implement play functionality
-    console.log('Play episode:', audioFile);
+  const handlePlayEpisode = (title: string, audioFile: string) => {
+    setSelectedEpisode({ title, audioFile });
   };
 
   return (
@@ -28,6 +30,14 @@ export function PodcastPage({ podcastId }: PodcastPageProps) {
         <h1 className="text-4xl font-bold mb-4">{podcast.title}</h1>
         <p className="text-lg text-muted-foreground">{podcast.description}</p>
       </div>
+
+      {/* Podcast Player */}
+      {selectedEpisode && (
+        <PodcastPlayer 
+          title={selectedEpisode.title}
+          audioSrc={selectedEpisode.audioFile}
+        />
+      )}
 
       {/* Episodes List */}
       <div className="space-y-4">
@@ -48,7 +58,7 @@ export function PodcastPage({ podcastId }: PodcastPageProps) {
               <Button 
                 variant="outline" 
                 className="flex items-center gap-2"
-                onClick={() => handlePlayEpisode(episode.audioFile)}
+                onClick={() => handlePlayEpisode(episode.title, episode.audioFile)}
               >
                 <PlayCircle size={20} />
                 Play Episode
