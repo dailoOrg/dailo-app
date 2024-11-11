@@ -226,16 +226,13 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
       {/* AI Response */}
       {showAiResponse && (
         <div className="mb-6">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-lg font-semibold">AI Response:</h2>
-            <StreamingAudioOutput 
-              stream={currentStream}
-              onComplete={() => {
-                setHasPlayedResponse(true);
-              }}
-            />
-          </div>
-          <Button onClick={resumePodcast} className="mt-2">
+          <StreamingAudioOutput 
+            stream={currentStream}
+            onComplete={() => {
+              setHasPlayedResponse(true);
+            }}
+          />
+          <Button onClick={resumePodcast} className="mt-4">
             Resume Podcast
           </Button>
         </div>
