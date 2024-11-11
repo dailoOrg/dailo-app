@@ -10,6 +10,7 @@ import { podcastQAPrompt } from '@/prompts/podcastQAPrompt'
 import { podcastTranscript } from '@/data/podcastTranscript'
 import AudioInput from './AudioInput'
 import AudioOutput from './AudioOutput'
+import StreamingAudioOutput from './StreamingAudioOutput'
 
 interface QAResponse {
   answer: string;
@@ -32,6 +33,7 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
   const { result, loading, error, partialResult, generateStreamingResponse, messages } = useOpenAIStream<QAResponse>();
   const [isRecording, setIsRecording] = useState(false);
   const [transcribedText, setTranscribedText] = useState('');
+  const [hasPlayedResponse, setHasPlayedResponse] = useState(false);
 
   // Handle audio play/pause
   const togglePlayPause = () => {
@@ -81,6 +83,7 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
     }
     setIsPlaying(false);
     setShowAiResponse(true);
+    setHasPlayedResponse(false);
 
     const prompt = {
       ...podcastQAPrompt,
@@ -213,7 +216,13 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
         <div className="mb-6">
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-lg font-semibold">AI Response:</h2>
-            {result && <AudioOutput text={result.answer} />}
+            <StreamingAudioOutput 
+              stream={loading ? null : (!hasPlayedResponse ? new Response(result?.answer).body : null)}
+              onComplete={() => {
+                setHasPlayedResponse(true);
+                resumePodcast();
+              }}
+            />
           </div>
           {loading ? (
             <div className="bg-gray-100 p-3 rounded">
