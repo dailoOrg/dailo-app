@@ -105,14 +105,6 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
     }
   };
 
-  const resumePodcast = () => {
-    setShowAiResponse(false)
-    if (audioRef.current) {
-      audioRef.current.play()
-      setIsPlaying(true)
-    }
-  }
-
   const handleTranscription = (text: string) => {
     setTranscribedText(text);
     handleAskQuestion(text);
@@ -151,7 +143,7 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
   }, []);
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+    <div className="mt-10 p-6 bg-white rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold mb-4">{title}</h1>
       
       {/* Hidden audio element */}
@@ -232,9 +224,6 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
               setHasPlayedResponse(true);
             }}
           />
-          <Button onClick={resumePodcast} className="mt-4">
-            Resume Podcast
-          </Button>
         </div>
       )}
     </div>
