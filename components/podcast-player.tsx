@@ -5,7 +5,6 @@ import { Play, Pause, SkipBack, SkipForward, Volume2, Mic } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
-import { useOpenAIStream } from '@/hooks/useOpenAIStream'
 import { podcastQAPrompt } from '@/prompts/podcastQAPrompt'
 import { podcastTranscript } from '@/data/podcastTranscript'
 import AudioInput from './AudioInput'
@@ -30,10 +29,10 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
   const [aiResponse, setAiResponse] = useState('')
   const [showAiResponse, setShowAiResponse] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
-  const { result, loading, error, partialResult, generateStreamingResponse, messages } = useOpenAIStream<QAResponse>();
   const [isRecording, setIsRecording] = useState(false);
   const [transcribedText, setTranscribedText] = useState('');
   const [hasPlayedResponse, setHasPlayedResponse] = useState(false);
+  const [currentStream, setCurrentStream] = useState<ReadableStream<Uint8Array> | null>(null);
 
   // Handle audio play/pause
   const togglePlayPause = () => {
@@ -85,12 +84,31 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
     setShowAiResponse(true);
     setHasPlayedResponse(false);
 
-    const prompt = {
-      ...podcastQAPrompt,
-      userPrompt: podcastQAPrompt.userPrompt(podcastTranscript, text)
-    };
+    try {
+      const response = await fetch('/api/openai/stream', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          prompt: {
+            ...podcastQAPrompt,
+            userPrompt: podcastQAPrompt.userPrompt(podcastTranscript, text)
+          }
+        }),
+      });
 
-    await generateStreamingResponse(prompt);
+      if (!response.ok) throw new Error('Stream request failed');
+      setShowAiResponse(true);
+      
+      // Pass the stream directly to StreamingAudioOutput
+      const stream = response.body;
+      if (stream) {
+        setCurrentStream(stream);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const resumePodcast = () => {
@@ -217,28 +235,12 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-lg font-semibold">AI Response:</h2>
             <StreamingAudioOutput 
-              stream={loading ? null : (!hasPlayedResponse ? new Response(result?.answer).body : null)}
+              stream={currentStream}
               onComplete={() => {
                 setHasPlayedResponse(true);
               }}
             />
           </div>
-          {loading ? (
-            <div className="bg-gray-100 p-3 rounded">
-              <p className="whitespace-pre-wrap">
-                {messages[messages.length - 1]?.content || 'Generating response...'}
-              </p>
-            </div>
-          ) : error ? (
-            <p className="bg-red-100 p-3 rounded text-red-600">{error}</p>
-          ) : result ? (
-            <div className="bg-gray-100 p-3 rounded">
-              <p className="whitespace-pre-wrap">{result.answer}</p>
-              <p className="text-sm text-gray-500 mt-2">
-                Confidence: {Math.round(result.confidence * 100)}%
-              </p>
-            </div>
-          ) : null}
           <Button onClick={resumePodcast} className="mt-2">
             Resume Podcast
           </Button>
