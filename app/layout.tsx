@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AI-Enhanced Podcast Player",
+  title: "PodcastAI - Interactive Podcast Experience",
   description: "Listen to podcasts with AI-powered interaction",
 };
 
