@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
+import Image from "next/image";
 import podcastData from "@/public/data/podcastData.json";
 
 export function LandingPage() {
@@ -8,19 +9,27 @@ export function LandingPage() {
   const firstPodcastId = podcastData.podcasts[0].id;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 space-y-12">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] p-4 space-y-12">
       {/* Hero Section */}
-      <div className="text-center space-y-6">
-        <h1 className="text-5xl font-bold tracking-tight">Welcome to PodcastAI</h1>
+      <div className="text-center space-y-12">
+        <Image 
+          src="/dailo.svg" 
+          alt="Dailo Logo" 
+          width={320} 
+          height={103} 
+          className="mx-auto mb-8 invert"
+        />
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Dive into the world of AI, Blockchain, and Internet Computer with our curated tech podcasts. 
+          Dive into the world of emerging technologies with our curated tech podcasts. 
           Get instant AI-powered insights while you listen.
         </p>
-        <Link href={`/podcasts/${firstPodcastId}`}>
-          <Button size="lg" className="font-semibold">
-            Start Listening
-          </Button>
-        </Link>
+        <div className="pt-4">
+          <Link href={`/podcasts/${firstPodcastId}`}>
+            <Button size="lg" className="font-semibold">
+              Start Listening
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Featured Podcasts */}
