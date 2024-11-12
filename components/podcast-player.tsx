@@ -3,13 +3,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { Play, Pause, SkipBack, SkipForward, Volume2, Mic } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
 import { podcastQAStreamPrompt } from '@/prompts/podcastQAStreamPrompt'
 import { podcastTranscript } from '@/data/podcastTranscript'
-import AudioInput from './AudioInput'
-import AudioOutput from './AudioOutput'
-import StreamingAudioOutput from './StreamingAudioOutput'
+import AudioInput from './audio/AudioInput'
+import StreamingAudioOutput from './audio/StreamingAudioOutput'
 
 interface PodcastPlayerProps {
   title: string;
@@ -20,8 +18,6 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
-  const [question, setQuestion] = useState('')
-  const [aiResponse, setAiResponse] = useState('')
   const [showAiResponse, setShowAiResponse] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [isRecording, setIsRecording] = useState(false);

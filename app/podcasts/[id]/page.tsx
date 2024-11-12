@@ -1,4 +1,4 @@
-import { PodcastPage } from "@/components/podcast-page";
+import { PodcastPage } from "@/app/podcast-page";
 
 interface PodcastPageProps {
   params: {
