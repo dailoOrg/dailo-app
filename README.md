@@ -1,119 +1,101 @@
-# Next.js AI Application Boilerplate
+# Dailo - AI-Enhanced Podcast Platform
 
-This project is a boilerplate for creating AI-powered applications using Next.js, Shadcn/ui, OpenAI API, and modern web technologies. It provides a structured foundation for building interactive AI applications.
+A modern web application that combines podcast streaming with AI-powered interactions, built using Next.js 14, Shadcn/ui, and OpenAI's APIs.
 
 ## 1. Tech Stack
-- [TypeScript](https://www.typescriptlang.org/) for static typing
-- [Next.js 14](https://nextjs.org/) for server-side rendering and routing
-- [Tailwind CSS](https://tailwindcss.com/) for styling
-- [Shadcn/ui](https://ui.shadcn.com/) for UI components
-- [OpenAI API](https://platform.openai.com/docs/api-reference) for AI-powered features
 
-## 2. Project Structure
+- [TypeScript](https://www.typescriptlang.org/) - Static typing and enhanced developer experience
+- [Next.js 14](https://nextjs.org/) - React framework with server-side rendering
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [Shadcn/ui](https://ui.shadcn.com/) - Customizable UI components
+- [OpenAI API](https://platform.openai.com/docs/api-reference) - Powers AI features including:
+  - Speech-to-Text (Whisper API)
+  - Text-to-Speech (TTS API)
+  - Chat Completions API
 
-- `app/`: Contains the main application code
-  - `api/openai/route.ts`: Handles OpenAI API integration, processes requests, and manages API calls to OpenAI
-  - `page.tsx`: Main page component rendering the PetNameGenerator
-- `components/`: Contains reusable React components
-  - `ui/`: Contains shadcn/ui components
-  - `petNameGenerator.tsx`: Core component for the Pet Name Generator application
-- `hooks/`: 
-  - `useOpenAI.ts`: Custom hook for OpenAI API interactions
-- `prompts/`: 
-  - `petNamePrompt.ts`: Configuration for pet name generation prompts with [structured outputs](https://platform.openai.com/docs/guides/structured-outputs) should use model gpt-4o-2024-08-06 or later
+## 2. Features
 
-## 3. Getting Started
+- 🎙️ Podcast Streaming - Listen to curated tech podcasts
+- 🤖 AI Interaction - Ask questions about podcast content in real-time
+- 🎯 Voice Input - Record questions using your microphone
+- 🔊 AI Voice Responses - Get answers in natural speech
+- 📱 Responsive Design - Works on desktop and mobile devices
 
-### 3.1 Clone the repository
+## 3. Project Structure
 
+- `app/` - Main application code
+  - `api/` - API routes for OpenAI integration
+    - `openai/` - Chat completion endpoints
+    - `text-to-speech/` - TTS conversion endpoint
+    - `transcribe/` - Speech-to-text endpoint
+  - `podcasts/` - Podcast pages and routing
+  - `landing-page.tsx` - Homepage component
+  - `podcast-page.tsx` - Individual podcast view
+
+- `components/` - Reusable React components
+  - `audio/` - Audio input/output components
+  - `layout/` - Layout components like navigation
+  - `ui/` - Shadcn UI components
+
+- `hooks/` - Custom React hooks
+  - `useOpenAI.ts` - OpenAI API integration
+  - `useStreamingTTS.ts` - Streaming TTS functionality
+  - `useOpenAIStream.ts` - Streaming completions
+
+- `public/` - Static assets and data
+  - `data/` - Podcast metadata and content
+
+## 4. Getting Started
+
+### Prerequisites
+
+- Node.js 18+ installed
+- OpenAI API key
+
+### Installation
+
+1. Clone the repository:
 ```bash
-git clone https://github.com/moritzfelipe/next-openai-shadcn-boilerplate.git
-cd next-openai-shadcn-boilerplate
+git clone <repository-url>
+cd dailo
 ```
 
-### 3.2 Install dependencies
-
+2. Install dependencies:
 ```bash
 npm install
 # or
 yarn install
-# or
-pnpm install
-# or
-bun install
 ```
 
-### 3.3 Add your OpenAI API key
-
-#### 3.3.1 Create a `.env.local` file in the root of the project or rename `.env.example` to `.env.local`
-#### 3.3.2 Get your OpenAI API key [here](https://platform.openai.com/api-keys)
-#### 3.3.3 Add your OpenAI API key:
-
+3. Create a `.env.local` file:
 ```bash
 OPENAI_API_KEY=your_openai_api_key
 ```
 
-### 3.4 Run the development server
-
-#### 3.4.1 Start the development server
+4. Start the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-#### 3.4.2 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-#### 3.4.3 Enter an animal name to generate a pet name.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## 4. Customization: Create your own AI-powered application
+## 5. Key Components
 
-### 4.1 Create a UI with v0
+### Podcast Player
+The core podcast player component (`components/podcast-player.tsx`) includes:
+- Audio playback controls
+- Progress tracking
+- Voice input for questions
+- AI response streaming
 
-#### 4.1.1 Go to [v0](https://v0.dev/chat) and create a UI in the chat until you are happy.
-#### 4.1.2 Click on 'Install' at the top to get installation instructions for the components.
-#### 4.1.3 Follow the terminal command provided to add the components to your project. The components are now installed into your project.
+### AI Integration
+- Real-time transcription of voice questions
+- Natural language processing of podcast content
+- Text-to-speech conversion for AI responses
 
-### 4.2 Install Cursor if you haven't already
-#### 4.2.1 Install Cursor from [here](https://cursor.sh/)
-#### 4.2.2 Open the project in Cursor
-#### 4.2.3 Ask Cursor in the chat to implement your installed components with a prompt like this:
-"I want to transform this petname generator boilerplate into a recipe app. You need to change and implement the recipe app file @recipe-app.tsx and create a new prompt file for it."
+## 6. Environment Variables
 
-Make sure to use claude-3.5-sonnet and click on the "ctrl+enter codebase" button.
-It is important to implement the new components and to create a new prompt file for it. Check the promptfile if it is structured correctly. This often causes errors.
-
-#### 4.2.4 Follow the instructions from Cursor. You can click on "Apply" on the top right if you are in the file that cursor wants you to change to directly apply the changes to it.
-
-#### 4.2.5 You can now start the development server again with:
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-#### 4.2.6 Debug your application. By copying the errors into the Cursor chat.
-#### 4.2.7 Ask Cursor to implement new changes.
-
-
-## Learn More
-
-To learn more about the technologies used in this boilerplate:
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [OpenAI API Documentation](https://platform.openai.com/docs)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
-
-## Deployment
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Required environment variables:
+- `OPENAI_API_KEY` - Your OpenAI API key
