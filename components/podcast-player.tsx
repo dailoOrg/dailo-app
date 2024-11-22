@@ -206,7 +206,7 @@ export function PodcastPlayer({
   };
 
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-black">
       <div className="flex items-start space-x-6">
         {/* Podcast Image */}
         <div className="flex-shrink-0">
@@ -221,10 +221,10 @@ export function PodcastPlayer({
         <div className="flex-grow">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h2 className="text-sm text-gray-500 mb-1">
+              <h2 className="text-sm text-gray-400 mb-1">
                 {podcastName} {episodeNumber && `#${episodeNumber}`}
               </h2>
-              <h1 className="text-lg font-semibold">{title}</h1>
+              <h1 className="text-lg font-semibold text-white">{title}</h1>
             </div>
             <div className="flex items-center space-x-4">
               {renderControls()}
@@ -239,11 +239,11 @@ export function PodcastPlayer({
               max={duration || 100}
               step={0.1}
               onValueChange={(value) => handleSliderChange(value)}
-              className="mb-2"
+              className="mb-2 [&_.relative]:bg-gray-800 [&_[data-disabled]]:bg-gray-800"
             />
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500">{formatTime(currentTime)}</span>
-              <span className="text-sm text-gray-500">{formatTime(duration)}</span>
+              <span className="text-sm text-gray-400">{formatTime(currentTime)}</span>
+              <span className="text-sm text-gray-400">{formatTime(duration)}</span>
             </div>
           </div>
         </div>

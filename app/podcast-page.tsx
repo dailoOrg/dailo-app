@@ -37,7 +37,7 @@ export function PodcastPage({ podcastId }: PodcastPageProps) {
 
       {/* Podcast Player */}
       {selectedEpisode && (
-        <div className="fixed bottom-0 left-0 right-0 bg-background border-t">
+        <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800">
           <div className="container mx-auto px-4 max-w-4xl">
             <PodcastPlayer 
               title={selectedEpisode.title}
