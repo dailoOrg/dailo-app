@@ -33,14 +33,18 @@ export function PodcastPage({ podcastId }: PodcastPageProps) {
 
       {/* Podcast Player */}
       {selectedEpisode && (
-        <PodcastPlayer 
-          title={selectedEpisode.title}
-          audioSrc={selectedEpisode.audioFile}
-        />
+        <div className="fixed bottom-0 left-0 right-0 bg-background border-t">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <PodcastPlayer 
+              title={selectedEpisode.title}
+              audioSrc={selectedEpisode.audioFile}
+            />
+          </div>
+        </div>
       )}
 
       {/* Episodes List */}
-      <div className="space-y-4">
+      <div className="space-y-4 mb-24">
         {podcast.episodes.map((episode) => (
           <Card key={episode.id} className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

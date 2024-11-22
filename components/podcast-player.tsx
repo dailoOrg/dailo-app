@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Play, Pause, SkipBack, SkipForward, Volume2, Mic } from 'lucide-react'
+import { Play, Pause, SkipBack, SkipForward, Volume2, Mic, Circle, X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { podcastQAStreamPrompt } from '@/prompts/podcastQAStreamPrompt'
@@ -57,13 +57,6 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
     if (audioRef.current) {
       audioRef.current.currentTime = value[0]
       setCurrentTime(value[0])
-    }
-  }
-
-  // Skip forward/backward
-  const handleSkip = (seconds: number) => {
-    if (audioRef.current) {
-      audioRef.current.currentTime += seconds
     }
   }
 
@@ -167,61 +160,54 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
           className="mb-4"
         />
         <div className="flex justify-center items-center space-x-4">
-          <Button variant="outline" size="icon" onClick={() => handleSkip(-10)}>
-            <SkipBack className="h-4 w-4" />
-          </Button>
-          <Button size="icon" onClick={togglePlayPause}>
-            {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
-          </Button>
-          <Button variant="outline" size="icon" onClick={() => handleSkip(10)}>
-            <SkipForward className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="icon">
-            <Volume2 className="h-4 w-4" />
-          </Button>
+          {showAiResponse && !hasPlayedResponse ? (
+            <Button 
+              size="icon" 
+              variant="outline"
+              onClick={() => {
+                setShowAiResponse(false);
+                setCurrentStream(null);
+              }}
+            >
+              <X className="h-6 w-6" />
+            </Button>
+          ) : (
+            <>
+              <Button size="icon" onClick={togglePlayPause}>
+                {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+              </Button>
+              <Button 
+                size="icon" 
+                onClick={handleAskClick}
+                className={isRecording ? 'bg-red-500 hover:bg-red-600' : ''}
+              >
+                {isRecording ? (
+                  <Circle className="h-4 w-4 fill-white" />
+                ) : (
+                  <Mic className="h-6 w-6" />
+                )}
+              </Button>
+            </>
+          )}
         </div>
       </div>
       
-      {/* Voice Input Section */}
-      <div className="mb-6">
-        <div className="flex flex-col space-y-2">
-          <Button 
-            onClick={handleAskClick}
-            className={isRecording ? 'bg-red-500 hover:bg-red-600' : ''}
-          >
-            <Mic className="h-4 w-4 mr-2" />
-            {isRecording ? 'Stop Recording' : 'Ask Question'}
-          </Button>
-          {isRecording && (
-            <span className="text-sm text-red-500 animate-pulse">
-              Recording... Click button to stop
-            </span>
-          )}
-          {transcribedText && !isRecording && (
-            <div className="bg-gray-100 p-3 rounded">
-              <p className="text-sm text-gray-600">Your question:</p>
-              <p>{transcribedText}</p>
-            </div>
-          )}
-        </div>
+      {/* Hidden but functional audio components */}
+      <div className="hidden">
         <AudioInput 
           isRecording={isRecording}
           onTranscription={handleTranscription}
           onRecordingComplete={handleRecordingComplete}
         />
-      </div>
-      
-      {/* AI Response */}
-      {showAiResponse && (
-        <div className="mb-6">
+        {showAiResponse && (
           <StreamingAudioOutput 
             stream={currentStream}
             onComplete={() => {
               setHasPlayedResponse(true);
             }}
           />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }
