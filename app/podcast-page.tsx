@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlayCircle } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import podcastData from "@/public/data/podcastData.json";
 import { PodcastPlayer } from '../components/podcast-player';
 
@@ -12,6 +13,7 @@ interface PodcastPageProps {
 }
 
 export function PodcastPage({ podcastId }: PodcastPageProps) {
+  const router = useRouter();
   const [selectedEpisode, setSelectedEpisode] = useState<{
     title: string;
     audioFile: string;
@@ -28,7 +30,16 @@ export function PodcastPage({ podcastId }: PodcastPageProps) {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="container mx-auto px-4 py-8 max-w-4xl relative">
+      {/* Back Button */}
+      <Button
+        variant="ghost"
+        className="absolute left-4 top-4 p-2 rounded-full hover:bg-gray-200 bg-[#F5F5F4]"
+        onClick={() => router.push('/')}
+      >
+        <ArrowLeft className="h-6 w-6 text-black" />
+      </Button>
+
       {/* Updated Podcast Header */}
       <div className="mb-8 flex flex-col items-center">
         <div className="max-w-md text-center">
