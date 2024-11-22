@@ -165,14 +165,15 @@ export function PodcastPlayer({
         return (
           <Button 
             size="icon" 
-            variant="outline"
+            variant="secondary"
+            className="rounded-full bg-white hover:bg-gray-100"
             onClick={() => {
               setShowAiResponse(false);
               setCurrentStream(null);
               setPlayerState(PlayerState.INITIAL);
             }}
           >
-            <X className="h-6 w-6" />
+            <X className="h-6 w-6 text-black" />
           </Button>
         );
       
@@ -181,24 +182,31 @@ export function PodcastPlayer({
           <Button 
             size="icon" 
             onClick={handleAskClick}
-            className="bg-red-300 hover:bg-red-400"
+            className="rounded-full bg-red-500 hover:bg-red-600"
           >
             <Circle className="h-4 w-4 fill-white" />
           </Button>
         );
-
-      case PlayerState.WAITING_FOR_RESPONSE:
-        // Show nothing while waiting for response
-        return null;
       
       default:
         return (
           <>
-            <Button size="icon" onClick={togglePlayPause}>
-              {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+            <Button 
+              size="icon" 
+              onClick={togglePlayPause}
+              className="rounded-full bg-white hover:bg-gray-100"
+            >
+              {isPlaying ? 
+                <Pause className="h-6 w-6 text-black" /> : 
+                <Play className="h-6 w-6 text-black" />
+              }
             </Button>
-            <Button size="icon" onClick={handleAskClick}>
-              <Mic className="h-6 w-6" />
+            <Button 
+              size="icon" 
+              onClick={handleAskClick}
+              className="rounded-full bg-white hover:bg-gray-100"
+            >
+              <Mic className="h-6 w-6 text-black" />
             </Button>
           </>
         );
