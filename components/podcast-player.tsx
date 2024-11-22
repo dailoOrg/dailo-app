@@ -247,7 +247,7 @@ export function PodcastPlayer({
               max={duration || 100}
               step={0.1}
               onValueChange={(value) => handleSliderChange(value)}
-              className="mb-2 [&_.relative]:bg-gray-800 [&_[data-disabled]]:bg-gray-800"
+              className="mb-2 [&_.relative]:bg-gray-800 [&_[data-disabled]]:bg-gray-800 [&_.absolute]:bg-red-500 [&_[role=slider]]:bg-red-500"
             />
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-400">{formatTime(currentTime)}</span>
