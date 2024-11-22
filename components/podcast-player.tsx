@@ -133,33 +133,10 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
 
   return (
     <div className="mt-10 p-6 bg-white rounded-lg shadow-lg">
-      <h1 className="text-2xl font-bold mb-4">{title}</h1>
-      
-      {/* Hidden audio element */}
-      <audio
-        ref={audioRef}
-        src={audioSrc}
-        preload="metadata"
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-        onEnded={() => setIsPlaying(false)}
-      />
-      
-      {/* Podcast Player */}
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm">{formatTime(currentTime)}</span>
-          <span className="text-sm">{formatTime(duration)}</span>
-        </div>
-        <Slider
-          value={[currentTime]}
-          min={0}
-          max={duration || 100}
-          step={0.1}
-          onValueChange={handleSliderChange}
-          className="mb-4"
-        />
-        <div className="flex justify-center items-center space-x-4">
+      {/* Top section with title and controls */}
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">{title}</h1>
+        <div className="flex items-center space-x-4">
           {showAiResponse && !hasPlayedResponse ? (
             <Button 
               size="icon" 
@@ -179,7 +156,7 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
               <Button 
                 size="icon" 
                 onClick={handleAskClick}
-                className={isRecording ? 'bg-red-500 hover:bg-red-600' : ''}
+                className={isRecording ? 'bg-red-300 hover:bg-red-400' : ''}
               >
                 {isRecording ? (
                   <Circle className="h-4 w-4 fill-white" />
@@ -191,7 +168,33 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
           )}
         </div>
       </div>
+
+      {/* Audio element - keeping it directly in the component */}
+      <audio
+        ref={audioRef}
+        src={audioSrc}
+        preload="metadata"
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onEnded={() => setIsPlaying(false)}
+      />
       
+      {/* Slider and time */}
+      <div>
+        <Slider
+          value={[currentTime]}
+          min={0}
+          max={duration || 100}
+          step={0.1}
+          onValueChange={(value) => handleSliderChange(value)}
+          className="mb-2"
+        />
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-gray-500">{formatTime(currentTime)}</span>
+          <span className="text-sm text-gray-500">{formatTime(duration)}</span>
+        </div>
+      </div>
+
       {/* Hidden but functional audio components */}
       <div className="hidden">
         <AudioInput 
