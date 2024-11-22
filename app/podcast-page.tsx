@@ -38,6 +38,7 @@ export function PodcastPage({ podcastId }: PodcastPageProps) {
             <PodcastPlayer 
               title={selectedEpisode.title}
               audioSrc={selectedEpisode.audioFile}
+              podcastName={podcast.title}
             />
           </div>
         </div>

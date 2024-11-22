@@ -12,6 +12,8 @@ import StreamingAudioOutput from './audio/StreamingAudioOutput'
 interface PodcastPlayerProps {
   title: string;
   audioSrc: string;
+  podcastName: string;
+  episodeNumber?: string;
 }
 
 // Add this enum at the top of the file or in a separate types file
@@ -23,7 +25,12 @@ enum PlayerState {
   AI_RESPONDING = 'AI_RESPONDING'
 }
 
-export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
+export function PodcastPlayer({ 
+  title, 
+  audioSrc, 
+  podcastName, 
+  episodeNumber 
+}: PodcastPlayerProps) {
   // Add new state for tracking player state
   const [playerState, setPlayerState] = useState<PlayerState>(PlayerState.INITIAL);
   
@@ -177,6 +184,10 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
             <Circle className="h-4 w-4 fill-white" />
           </Button>
         );
+
+      case PlayerState.WAITING_FOR_RESPONSE:
+        // Show nothing while waiting for response
+        return null;
       
       default:
         return (
@@ -194,9 +205,13 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
 
   return (
     <div className="mt-10 p-6 bg-white rounded-lg shadow-lg">
-      {/* Top section with title and controls */}
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">{title}</h1>
+        <div>
+          <h2 className="text-sm text-gray-500 mb-1">
+            {podcastName} {episodeNumber && `#${episodeNumber}`}
+          </h2>
+          <h1 className="text-lg font-semibold">{title}</h1>
+        </div>
         <div className="flex items-center space-x-4">
           {renderControls()}
         </div>
