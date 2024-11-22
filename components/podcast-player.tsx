@@ -206,7 +206,7 @@ export function PodcastPlayer({
   };
 
   return (
-    <div className="mt-10 p-6 bg-white rounded-lg shadow-lg">
+    <div className="p-4 bg-white">
       <div className="flex items-start space-x-6">
         {/* Podcast Image */}
         <div className="flex-shrink-0">
