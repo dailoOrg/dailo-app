@@ -92,6 +92,7 @@
       "id": "blockchain-decoded",
       "title": "Blockchain Decoded",
       "description": "Understanding blockchain technology, cryptocurrencies, and their impact on the future of finance",
+      "image": "/images/blockchain-decoded.png",
       "episodes": [
         {
           "id": 1,
@@ -179,6 +180,7 @@
       "id": "icp-insights",
       "title": "ICP Insights",
       "description": "Diving deep into the Internet Computer Protocol and its revolutionary approach to cloud computing",
+      "image": "/images/icp-insights.png",
       "episodes": [
         {
           "id": 1,
