@@ -14,7 +14,20 @@ interface PodcastPlayerProps {
   audioSrc: string;
 }
 
+// Add this enum at the top of the file or in a separate types file
+enum PlayerState {
+  INITIAL = 'INITIAL',
+  PLAYING_PODCAST = 'PLAYING_PODCAST',
+  RECORDING_QUESTION = 'RECORDING_QUESTION',
+  WAITING_FOR_RESPONSE = 'WAITING_FOR_RESPONSE',
+  AI_RESPONDING = 'AI_RESPONDING'
+}
+
 export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
+  // Add new state for tracking player state
+  const [playerState, setPlayerState] = useState<PlayerState>(PlayerState.INITIAL);
+  
+  // Existing states - some of these might be redundant now
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
@@ -25,13 +38,15 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
   const [hasPlayedResponse, setHasPlayedResponse] = useState(false);
   const [currentStream, setCurrentStream] = useState<ReadableStream<Uint8Array> | null>(null);
 
-  // Handle audio play/pause
+  // Update handlers to manage state transitions
   const togglePlayPause = () => {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause()
+        setPlayerState(PlayerState.INITIAL)
       } else {
         audioRef.current.play()
+        setPlayerState(PlayerState.PLAYING_PODCAST)
       }
       setIsPlaying(!isPlaying)
     }
@@ -67,6 +82,7 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
     setIsPlaying(false);
     setShowAiResponse(true);
     setHasPlayedResponse(false);
+    setPlayerState(PlayerState.AI_RESPONDING);
 
     try {
       const response = await fetch('/api/openai/stream', {
@@ -83,7 +99,6 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
       });
 
       if (!response.ok) throw new Error('Stream request failed');
-      setShowAiResponse(true);
       
       const stream = response.body;
       if (stream) {
@@ -91,6 +106,7 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
       }
     } catch (error) {
       console.error('Error:', error);
+      setPlayerState(PlayerState.INITIAL); // Reset state on error
     }
   };
 
@@ -102,9 +118,11 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
   const handleAskClick = () => {
     if (isRecording) {
       setIsRecording(false);
+      setPlayerState(PlayerState.WAITING_FOR_RESPONSE);
     } else {
       setTranscribedText('');
       setIsRecording(true);
+      setPlayerState(PlayerState.RECORDING_QUESTION);
     }
   };
 
@@ -131,41 +149,56 @@ export function PodcastPlayer({ title, audioSrc }: PodcastPlayerProps) {
     }
   }, []);
 
+  // Helper function to render controls based on state
+  const renderControls = () => {
+    switch (playerState) {
+      case PlayerState.AI_RESPONDING:
+        return (
+          <Button 
+            size="icon" 
+            variant="outline"
+            onClick={() => {
+              setShowAiResponse(false);
+              setCurrentStream(null);
+              setPlayerState(PlayerState.INITIAL);
+            }}
+          >
+            <X className="h-6 w-6" />
+          </Button>
+        );
+      
+      case PlayerState.RECORDING_QUESTION:
+        return (
+          <Button 
+            size="icon" 
+            onClick={handleAskClick}
+            className="bg-red-300 hover:bg-red-400"
+          >
+            <Circle className="h-4 w-4 fill-white" />
+          </Button>
+        );
+      
+      default:
+        return (
+          <>
+            <Button size="icon" onClick={togglePlayPause}>
+              {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+            </Button>
+            <Button size="icon" onClick={handleAskClick}>
+              <Mic className="h-6 w-6" />
+            </Button>
+          </>
+        );
+    }
+  };
+
   return (
     <div className="mt-10 p-6 bg-white rounded-lg shadow-lg">
       {/* Top section with title and controls */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">{title}</h1>
         <div className="flex items-center space-x-4">
-          {showAiResponse && !hasPlayedResponse ? (
-            <Button 
-              size="icon" 
-              variant="outline"
-              onClick={() => {
-                setShowAiResponse(false);
-                setCurrentStream(null);
-              }}
-            >
-              <X className="h-6 w-6" />
-            </Button>
-          ) : (
-            <>
-              <Button size="icon" onClick={togglePlayPause}>
-                {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
-              </Button>
-              <Button 
-                size="icon" 
-                onClick={handleAskClick}
-                className={isRecording ? 'bg-red-300 hover:bg-red-400' : ''}
-              >
-                {isRecording ? (
-                  <Circle className="h-4 w-4 fill-white" />
-                ) : (
-                  <Mic className="h-6 w-6" />
-                )}
-              </Button>
-            </>
-          )}
+          {renderControls()}
         </div>
       </div>
 
