@@ -12,15 +12,19 @@ interface PodcastPageProps {
 }
 
 export function PodcastPage({ podcastId }: PodcastPageProps) {
-  const [selectedEpisode, setSelectedEpisode] = useState<{title: string, audioFile: string} | null>(null);
+  const [selectedEpisode, setSelectedEpisode] = useState<{
+    title: string;
+    audioFile: string;
+    episodeNumber: string;
+  } | null>(null);
   const podcast = podcastData.podcasts.find((p) => p.id === podcastId);
 
   if (!podcast) {
     return <div>Podcast not found</div>;
   }
 
-  const handlePlayEpisode = (title: string, audioFile: string) => {
-    setSelectedEpisode({ title, audioFile });
+  const handlePlayEpisode = (title: string, audioFile: string, episodeNumber: string) => {
+    setSelectedEpisode({ title, audioFile, episodeNumber });
   };
 
   return (
@@ -39,6 +43,8 @@ export function PodcastPage({ podcastId }: PodcastPageProps) {
               title={selectedEpisode.title}
               audioSrc={selectedEpisode.audioFile}
               podcastName={podcast.title}
+              episodeNumber={selectedEpisode.episodeNumber}
+              podcastImage="/images/ai-frontiers.png"
             />
           </div>
         </div>
@@ -63,7 +69,7 @@ export function PodcastPage({ podcastId }: PodcastPageProps) {
               <Button 
                 variant="outline" 
                 className="flex items-center gap-2"
-                onClick={() => handlePlayEpisode(episode.title, episode.audioFile)}
+                onClick={() => handlePlayEpisode(episode.title, episode.audioFile, episode.episodeNumber)}
               >
                 <PlayCircle size={20} />
                 Play Episode

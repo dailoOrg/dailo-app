@@ -4,17 +4,20 @@
       "id": "ai-frontiers",
       "title": "AI Frontiers",
       "description": "Exploring the latest developments in artificial intelligence, machine learning, and their real-world applications",
+      "image": "/images/ai-frontiers.png",
       "episodes": [
         {
           "id": 1,
           "title": "Introduction to Modern AI",
+          "episodeNumber": "01",
           "description": "A beginner-friendly overview of artificial intelligence and its current state",
           "audioFile": "/audio/ai-frontiers/episode1.mp3",
-          "duration": "4:45"
+          "duration": "7:44"
         },
         {
           "id": 2,
           "title": "Large Language Models Explained",
+          "episodeNumber": "02",
           "description": "Deep dive into LLMs and their impact on natural language processing",
           "audioFile": "/audio/ai-frontiers/episode2.mp3",
           "duration": "8:15"
@@ -22,6 +25,7 @@
         {
           "id": 3,
           "title": "Computer Vision Breakthroughs",
+          "episodeNumber": "03",
           "description": "Recent advances in computer vision and image recognition",
           "audioFile": "/audio/ai-frontiers/episode3.mp3",
           "duration": "7:30"
@@ -29,6 +33,7 @@
         {
           "id": 4,
           "title": "AI Ethics and Responsibility",
+          "episodeNumber": "04",
           "description": "Discussing ethical considerations in AI development",
           "audioFile": "/audio/ai-frontiers/episode4.mp3",
           "duration": "9:20"
@@ -36,6 +41,7 @@
         {
           "id": 5,
           "title": "AI in Healthcare",
+          "episodeNumber": "05",
           "description": "How AI is transforming medical diagnosis and treatment",
           "audioFile": "/audio/ai-frontiers/episode5.mp3",
           "duration": "6:45"
@@ -43,6 +49,7 @@
         {
           "id": 6,
           "title": "Reinforcement Learning",
+          "episodeNumber": "06",
           "description": "Understanding how AI learns through trial and error",
           "audioFile": "/audio/ai-frontiers/episode6.mp3",
           "duration": "8:50"
@@ -50,6 +57,7 @@
         {
           "id": 7,
           "title": "AI in Business",
+          "episodeNumber": "07",
           "description": "Applications of AI in modern business operations",
           "audioFile": "/audio/ai-frontiers/episode7.mp3",
           "duration": "7:15"
@@ -57,6 +65,7 @@
         {
           "id": 8,
           "title": "Future of AI Assistants",
+          "episodeNumber": "08",
           "description": "The evolution and potential of AI personal assistants",
           "audioFile": "/audio/ai-frontiers/episode8.mp3",
           "duration": "9:10"
@@ -64,6 +73,7 @@
         {
           "id": 9,
           "title": "AI and Creativity",
+          "episodeNumber": "09",
           "description": "How AI is revolutionizing art, music, and creative industries",
           "audioFile": "/audio/ai-frontiers/episode9.mp3",
           "duration": "6:30"
@@ -71,6 +81,7 @@
         {
           "id": 10,
           "title": "The Road Ahead in AI",
+          "episodeNumber": "010",
           "description": "Predictions and upcoming trends in artificial intelligence",
           "audioFile": "/audio/ai-frontiers/episode10.mp3",
           "duration": "8:40"
@@ -85,6 +96,7 @@
         {
           "id": 1,
           "title": "Blockchain Basics",
+          "episodeNumber": "01",
           "description": "Understanding the fundamentals of blockchain technology",
           "audioFile": "/audio/blockchain-decoded/episode1.mp3",
           "duration": "4:30"
@@ -92,6 +104,7 @@
         {
           "id": 2,
           "title": "Smart Contracts Deep Dive",
+          "episodeNumber": "02",
           "description": "Exploring the power of automated blockchain contracts",
           "audioFile": "/audio/blockchain-decoded/episode2.mp3",
           "duration": "7:45"
@@ -99,6 +112,7 @@
         {
           "id": 3,
           "title": "DeFi Revolution",
+          "episodeNumber": "03",
           "description": "The rise of decentralized finance",
           "audioFile": "/audio/blockchain-decoded/episode3.mp3",
           "duration": "8:20"
@@ -106,6 +120,7 @@
         {
           "id": 4,
           "title": "NFTs Explained",
+          "episodeNumber": "04",
           "description": "Understanding non-fungible tokens and digital ownership",
           "audioFile": "/audio/blockchain-decoded/episode4.mp3",
           "duration": "6:55"
@@ -113,6 +128,7 @@
         {
           "id": 5,
           "title": "Cryptocurrency Mining",
+          "episodeNumber": "05",
           "description": "How crypto mining works and its environmental impact",
           "audioFile": "/audio/blockchain-decoded/episode5.mp3",
           "duration": "9:15"
@@ -120,6 +136,7 @@
         {
           "id": 6,
           "title": "Blockchain Security",
+          "episodeNumber": "06",
           "description": "Security measures and best practices in blockchain",
           "audioFile": "/audio/blockchain-decoded/episode6.mp3",
           "duration": "7:40"
@@ -127,6 +144,7 @@
         {
           "id": 7,
           "title": "Enterprise Blockchain",
+          "episodeNumber": "07",
           "description": "How businesses are adopting blockchain technology",
           "audioFile": "/audio/blockchain-decoded/episode7.mp3",
           "duration": "8:10"
@@ -134,6 +152,7 @@
         {
           "id": 8,
           "title": "Blockchain Scalability",
+          "episodeNumber": "08",
           "description": "Addressing the challenges of blockchain growth",
           "audioFile": "/audio/blockchain-decoded/episode8.mp3",
           "duration": "6:50"
@@ -141,6 +160,7 @@
         {
           "id": 9,
           "title": "Cross-Chain Integration",
+          "episodeNumber": "09",
           "description": "Understanding blockchain interoperability",
           "audioFile": "/audio/blockchain-decoded/episode9.mp3",
           "duration": "7:25"
@@ -148,6 +168,7 @@
         {
           "id": 10,
           "title": "Future of Blockchain",
+          "episodeNumber": "010",
           "description": "Emerging trends and future applications",
           "audioFile": "/audio/blockchain-decoded/episode10.mp3",
           "duration": "8:35"
@@ -162,6 +183,7 @@
         {
           "id": 1,
           "title": "What is the Internet Computer?",
+          "episodeNumber": "01",
           "description": "Introduction to ICP and its core concepts",
           "audioFile": "/audio/icp-insights/episode1.mp3",
           "duration": "4:15"
@@ -169,6 +191,7 @@
         {
           "id": 2,
           "title": "DFINITY Foundation",
+          "episodeNumber": "02",
           "description": "The organization behind the Internet Computer",
           "audioFile": "/audio/icp-insights/episode2.mp3",
           "duration": "7:20"
@@ -176,6 +199,7 @@
         {
           "id": 3,
           "title": "ICP Tokenomics",
+          "episodeNumber": "03",
           "description": "Understanding the ICP token ecosystem",
           "audioFile": "/audio/icp-insights/episode3.mp3",
           "duration": "8:45"
@@ -183,6 +207,7 @@
         {
           "id": 4,
           "title": "Building on ICP",
+          "episodeNumber": "04",
           "description": "Developer tools and resources for ICP",
           "audioFile": "/audio/icp-insights/episode4.mp3",
           "duration": "9:10"
@@ -190,6 +215,7 @@
         {
           "id": 5,
           "title": "ICP Network Architecture",
+          "episodeNumber": "05",
           "description": "Technical deep dive into ICP's infrastructure",
           "audioFile": "/audio/icp-insights/episode5.mp3",
           "duration": "7:55"
@@ -197,6 +223,7 @@
         {
           "id": 6,
           "title": "ICP Smart Contracts",
+          "episodeNumber": "06",
           "description": "Understanding canisters and smart contracts on ICP",
           "audioFile": "/audio/icp-insights/episode6.mp3",
           "duration": "8:30"
@@ -204,6 +231,7 @@
         {
           "id": 7,
           "title": "ICP Governance",
+          "episodeNumber": "07",
           "description": "How decisions are made in the ICP ecosystem",
           "audioFile": "/audio/icp-insights/episode7.mp3",
           "duration": "6:40"
@@ -211,6 +239,7 @@
         {
           "id": 8,
           "title": "DApps on ICP",
+          "episodeNumber": "08",
           "description": "Exploring decentralized applications on Internet Computer",
           "audioFile": "/audio/icp-insights/episode8.mp3",
           "duration": "7:50"
@@ -218,6 +247,7 @@
         {
           "id": 9,
           "title": "ICP Security Features",
+          "episodeNumber": "09",
           "description": "Security mechanisms and protocols in ICP",
           "audioFile": "/audio/icp-insights/episode9.mp3",
           "duration": "8:15"
@@ -225,6 +255,7 @@
         {
           "id": 10,
           "title": "ICP's Vision",
+          "episodeNumber": "010",
           "description": "The future of Internet Computer and web3",
           "audioFile": "/audio/icp-insights/episode10.mp3",
           "duration": "9:00"

@@ -14,6 +14,7 @@ interface PodcastPlayerProps {
   audioSrc: string;
   podcastName: string;
   episodeNumber?: string;
+  podcastImage: string;
 }
 
 // Add this enum at the top of the file or in a separate types file
@@ -29,7 +30,8 @@ export function PodcastPlayer({
   title, 
   audioSrc, 
   podcastName, 
-  episodeNumber 
+  episodeNumber,
+  podcastImage 
 }: PodcastPlayerProps) {
   // Add new state for tracking player state
   const [playerState, setPlayerState] = useState<PlayerState>(PlayerState.INITIAL);
@@ -205,15 +207,45 @@ export function PodcastPlayer({
 
   return (
     <div className="mt-10 p-6 bg-white rounded-lg shadow-lg">
-      <div className="flex justify-between items-center mb-4">
-        <div>
-          <h2 className="text-sm text-gray-500 mb-1">
-            {podcastName} {episodeNumber && `#${episodeNumber}`}
-          </h2>
-          <h1 className="text-lg font-semibold">{title}</h1>
+      <div className="flex items-start space-x-6">
+        {/* Podcast Image */}
+        <div className="flex-shrink-0">
+          <img 
+            src={podcastImage} 
+            alt={podcastName}
+            className="w-24 h-24 rounded-lg object-cover"
+          />
         </div>
-        <div className="flex items-center space-x-4">
-          {renderControls()}
+
+        {/* Main Content */}
+        <div className="flex-grow">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h2 className="text-sm text-gray-500 mb-1">
+                {podcastName} {episodeNumber && `#${episodeNumber}`}
+              </h2>
+              <h1 className="text-lg font-semibold">{title}</h1>
+            </div>
+            <div className="flex items-center space-x-4">
+              {renderControls()}
+            </div>
+          </div>
+
+          {/* Slider and other elements */}
+          <div>
+            <Slider
+              value={[currentTime]}
+              min={0}
+              max={duration || 100}
+              step={0.1}
+              onValueChange={(value) => handleSliderChange(value)}
+              className="mb-2"
+            />
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-500">{formatTime(currentTime)}</span>
+              <span className="text-sm text-gray-500">{formatTime(duration)}</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -227,22 +259,6 @@ export function PodcastPlayer({
         onEnded={() => setIsPlaying(false)}
       />
       
-      {/* Slider and time */}
-      <div>
-        <Slider
-          value={[currentTime]}
-          min={0}
-          max={duration || 100}
-          step={0.1}
-          onValueChange={(value) => handleSliderChange(value)}
-          className="mb-2"
-        />
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-500">{formatTime(currentTime)}</span>
-          <span className="text-sm text-gray-500">{formatTime(duration)}</span>
-        </div>
-      </div>
-
       {/* Hidden but functional audio components */}
       <div className="hidden">
         <AudioInput 
