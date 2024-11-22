@@ -29,10 +29,20 @@ export function PodcastPage({ podcastId }: PodcastPageProps) {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      {/* Podcast Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-4">{podcast.title}</h1>
-        <p className="text-lg text-muted-foreground">{podcast.description}</p>
+      {/* Updated Podcast Header */}
+      <div className="mb-8 flex flex-col items-center">
+        <div className="max-w-md text-center">
+          <img 
+            src={podcast.image} 
+            alt={`${podcast.title} cover`}
+            className="w-48 h-48 mx-auto mb-6 rounded-lg shadow-lg"
+          />
+          <h1 className="text-5xl font-extrabold text-black mb-3">{podcast.title}</h1>
+          <p className="text-base text-black mb-4">{podcast.description}</p>
+          <p className="text-sm font-medium text-black uppercase">
+            {podcast.episodes.length} EPISODES
+          </p>
+        </div>
       </div>
 
       {/* Podcast Player */}
@@ -53,27 +63,26 @@ export function PodcastPage({ podcastId }: PodcastPageProps) {
       {/* Episodes List */}
       <div className="space-y-4 mb-24">
         {podcast.episodes.map((episode) => (
-          <Card key={episode.id} className="hover:shadow-md transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xl font-semibold">
-                {episode.title}
-              </CardTitle>
-              <div className="text-sm text-muted-foreground">
+          <Card 
+            key={episode.id} 
+            className="hover:shadow-md transition-shadow bg-[#F5F5F4] cursor-pointer p-6"
+            onClick={() => handlePlayEpisode(episode.title, episode.audioFile, episode.episodeNumber)}
+          >
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-0 pt-0">
+              <div className="text-xs font-medium text-black mb-1">
+                EPISODE {episode.episodeNumber}
+              </div>
+              <div className="text-xs font-medium text-black">
                 {episode.duration}
               </div>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-4">
+            <CardContent className="px-0 pb-4">
+              <CardTitle className="text-lg font-semibold text-black mb-2">
+                {episode.title}
+              </CardTitle>
+              <p className="text-sm text-black">
                 {episode.description}
               </p>
-              <Button 
-                variant="outline" 
-                className="flex items-center gap-2"
-                onClick={() => handlePlayEpisode(episode.title, episode.audioFile, episode.episodeNumber)}
-              >
-                <PlayCircle size={20} />
-                Play Episode
-              </Button>
             </CardContent>
           </Card>
         ))}
