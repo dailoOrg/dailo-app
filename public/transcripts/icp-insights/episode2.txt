@@ -1,4 +1,4 @@
-ALEX: Hey everyone, welcome back to "ICP: Internet Evolved." I'm your host Alex, and if you caught our last episode, we introduced the concept of the Internet Computer Protocol and its vision for a decentralized internet. Today, we're joined again by our expert, Jane. It's great to have you back with us.
+ALEX: Hey everyone, welcome back to "ICP: Insights." I'm your host Alex, and if you caught our last episode, we introduced the concept of the Internet Computer Protocol and its vision for a decentralized internet. Today, we're joined again by our expert, Jane. It's great to have you back with us.
 
 JANE: Thanks, Alex. I'm looking forward to exploring where we've been to appreciate where we're heading with ICP.
 
@@ -70,4 +70,4 @@ ALEX: This has been informative, Jane. Let me summarize what we've covered today
 
 JANE: That's a good synthesis, Alex. And what's important here is that we're not just talking about technical improvements - we're talking about reimagining how the internet works. It's about creating something more open, secure, and user-centric.
 
-ALEX: And that's where we'll wrap up today's episode of "ICP: Internet Evolved." Thanks for joining us, everyone. Next time, we'll dive deeper into this fascinating world of decentralization and how ICP is making it all possible. Until then, keep evolving!
+ALEX: And that's where we'll wrap up today's episode of "ICP: Insights." Thanks for joining us, everyone. Next time, we'll dive deeper into this fascinating world of decentralization and how ICP is making it all possible. Until then, keep evolving!

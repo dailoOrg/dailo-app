@@ -1,4 +1,4 @@
-ALEX: Hey everyone, welcome back to "ICP: Internet Evolved." I'm your host Alex, and if you caught our last episode, we took a deep dive into canisters - ICP's take on smart contracts. Today we have Jane back with us to explore what it takes to build on the Internet Computer. Jane, thanks for joining us again.
+ALEX: Hey everyone, welcome back to "ICP: Insights." I'm your host Alex, and if you caught our last episode, we took a deep dive into canisters - ICP's take on smart contracts. Today we have Jane back with us to explore what it takes to build on the Internet Computer. Jane, thanks for joining us again.
 
 JANE: Thanks Alex. I'm glad to talk about development on ICP, especially because it's such a fundamental shift from what most developers are used to.
 

@@ -1,4 +1,4 @@
-ALEX: Hey everyone, welcome back to "ICP: Internet Evolved." I'm your host Alex, and today we're tackling an important topic - the challenge of scalability in blockchain technology. I'm pleased to have with us our expert guest, Jane, who's going to help us understand how the Internet Computer handles this crucial issue.
+ALEX: Hey everyone, welcome back to "ICP: Insights." I'm your host Alex, and today we're tackling an important topic - the challenge of scalability in blockchain technology. I'm pleased to have with us our expert guest, Jane, who's going to help us understand how the Internet Computer handles this crucial issue.
 
 JANE: Thanks, Alex. Scalability has been the Achilles' heel of blockchain networks since Bitcoin came along. (laughs) Traditional blockchains are like single-lane highways – they can only handle so much traffic before everything grinds to a halt.
 

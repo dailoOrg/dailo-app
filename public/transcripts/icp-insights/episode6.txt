@@ -1,4 +1,4 @@
-ALEX: Hey everyone, welcome back to "ICP: Internet Evolved." I'm your host Alex, and today we'll explore Chain-Key Technology and how it makes the Internet Computer fast. I'm pleased to welcome back our expert, Jane, to discuss the Network Nervous System, or NNS. Jane, welcome back!
+ALEX: Hey everyone, welcome back to "ICP: Insights." I'm your host Alex, and today we'll explore Chain-Key Technology and how it makes the Internet Computer fast. I'm pleased to welcome back our expert, Jane, to discuss the Network Nervous System, or NNS. Jane, welcome back!
 
 JANE: Thanks, Alex! (laughs) The NNS is one of the most innovative aspects of the Internet Computer Protocol.
 

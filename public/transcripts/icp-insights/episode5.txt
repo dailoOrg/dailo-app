@@ -1,4 +1,4 @@
-ALEX: Hey everyone, welcome back to "ICP: Internet Evolved." I'm your host Alex. If you caught our last episode, we explored the world of canisters - ICP's innovative take on smart contracts. Today we're discussing Chain-Key Technology, and I'm pleased to have our blockchain expert, Jane, joining us again. Welcome back!
+ALEX: Hey everyone, welcome back to "ICP: Insights." I'm your host Alex. If you caught our last episode, we explored the world of canisters - ICP's innovative take on smart contracts. Today we're discussing Chain-Key Technology, and I'm pleased to have our blockchain expert, Jane, joining us again. Welcome back!
 
 JANE: Thanks, Alex. I'm looking forward to discussing Chain-Key Technology because it represents a paradigm shift in how blockchain networks operate.
 
@@ -66,4 +66,4 @@ ALEX: Let me summarize the key points we've covered about Chain-Key Technology. 
 
 JANE: You've summarized it well. The key innovation is how Chain-Key Technology transforms blockchain architecture through threshold cryptography. It's not just about speed - though processing transactions in 1-2 seconds is significant - it's about creating a new paradigm where we can scale to millions of nodes while maintaining security, without requiring massive data replication.
 
-ALEX: Thank you, Jane. This helps connect many concepts we've been exploring throughout our series, from basic cryptography to consensus mechanisms and scalability solutions. For our listeners, in our next episode, we'll be exploring how Chain-Key Technology integrates with the Network Nervous System - ICP's governance mechanism. Until then, thanks for listening to "ICP: Internet Evolved."
+ALEX: Thank you, Jane. This helps connect many concepts we've been exploring throughout our series, from basic cryptography to consensus mechanisms and scalability solutions. For our listeners, in our next episode, we'll be exploring how Chain-Key Technology integrates with the Network Nervous System - ICP's governance mechanism. Until then, thanks for listening to "ICP: Insights."

@@ -1,4 +1,4 @@
-ALEX: Welcome back to "ICP: Internet Evolved." I'm your host Alex, and in our previous episode, we explored the fundamental role of decentralization in the Internet Computer Protocol. Today, we're discussing an important topic: Canisters. And joining me again is our blockchain expert, Jane. Welcome back!
+ALEX: Welcome back to "ICP: Insights." I'm your host Alex, and in our previous episode, we explored the fundamental role of decentralization in the Internet Computer Protocol. Today, we're discussing an important topic: Canisters. And joining me again is our blockchain expert, Jane. Welcome back!
 
 JANE: Thanks, Alex! Canisters represent one of the most innovative aspects of the Internet Computer Protocol.
 

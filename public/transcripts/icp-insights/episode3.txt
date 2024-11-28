@@ -1,4 +1,4 @@
-ALEX: Welcome back to "ICP: Internet Evolved." I'm your host Alex. In our last episode, we traced the journey of the internet's evolution and explored how blockchain technology emerged as a revolutionary force. Today, we're joined again by our expert, Jane, to dive into something fundamental to the Internet Computer: decentralization. Jane, it's good to have you back with us.
+ALEX: Welcome back to "ICP: Insights." I'm your host Alex. In our last episode, we traced the journey of the internet's evolution and explored how blockchain technology emerged as a revolutionary force. Today, we're joined again by our expert, Jane, to dive into something fundamental to the Internet Computer: decentralization. Jane, it's good to have you back with us.
 
 JANE: Thanks, Alex. I'm glad to explore this topic because decentralization isn't just another buzzword – it's a fundamental shift in how we think about and build digital systems.
 
