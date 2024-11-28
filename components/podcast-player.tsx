@@ -294,6 +294,9 @@ export function PodcastPlayer({
             stream={currentStream}
             onComplete={() => {
               setHasPlayedResponse(true);
+              setShowAiResponse(false);
+              setPlayerState(PlayerState.INITIAL);
+              setCurrentStream(null);
             }}
           />
         )}
