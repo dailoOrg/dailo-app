@@ -188,6 +188,21 @@ export function PodcastPlayer({
           </Button>
         );
       
+      case PlayerState.WAITING_FOR_RESPONSE:
+        return (
+          <Button 
+            size="icon" 
+            variant="secondary"
+            className="rounded-full bg-white hover:bg-gray-100"
+            onClick={() => {
+              setShowAiResponse(false);
+              setPlayerState(PlayerState.INITIAL);
+            }}
+          >
+            <X className="h-6 w-6 text-black" />
+          </Button>
+        );
+      
       default:
         return (
           <>
