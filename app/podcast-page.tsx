@@ -18,6 +18,7 @@ export function PodcastPage({ podcastId }: PodcastPageProps) {
     title: string;
     audioFile: string;
     episodeNumber: string;
+    transcriptFile: string;
   } | null>(null);
   const podcast = podcastData.podcasts.find((p) => p.id === podcastId);
 
@@ -25,8 +26,8 @@ export function PodcastPage({ podcastId }: PodcastPageProps) {
     return <div>Podcast not found</div>;
   }
 
-  const handlePlayEpisode = (title: string, audioFile: string, episodeNumber: string) => {
-    setSelectedEpisode({ title, audioFile, episodeNumber });
+  const handlePlayEpisode = (title: string, audioFile: string, episodeNumber: string, transcriptFile: string) => {
+    setSelectedEpisode({ title, audioFile, episodeNumber, transcriptFile });
   };
 
   return (
@@ -66,6 +67,7 @@ export function PodcastPage({ podcastId }: PodcastPageProps) {
               podcastName={podcast.title}
               episodeNumber={selectedEpisode.episodeNumber}
               podcastImage="/images/ai-frontiers.png"
+              transcriptFile={selectedEpisode.transcriptFile}
             />
           </div>
         </div>
@@ -77,7 +79,7 @@ export function PodcastPage({ podcastId }: PodcastPageProps) {
           <Card 
             key={episode.id} 
             className="hover:shadow-md transition-shadow bg-[#F5F5F4] cursor-pointer p-6"
-            onClick={() => handlePlayEpisode(episode.title, episode.audioFile, episode.episodeNumber)}
+            onClick={() => handlePlayEpisode(episode.title, episode.audioFile, episode.episodeNumber, episode.transcriptFile)}
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-0 pt-0">
               <div className="text-xs font-medium text-black mb-1">

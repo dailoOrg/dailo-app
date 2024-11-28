@@ -5,7 +5,6 @@ import { Play, Pause, SkipBack, SkipForward, Volume2, Mic, Circle, X } from 'luc
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { podcastQAStreamPrompt } from '@/prompts/podcastQAStreamPrompt'
-import { podcastTranscript } from '@/data/podcastTranscript'
 import AudioInput from './audio/AudioInput'
 import StreamingAudioOutput from './audio/StreamingAudioOutput'
 
@@ -15,6 +14,7 @@ interface PodcastPlayerProps {
   podcastName: string;
   episodeNumber?: string;
   podcastImage: string;
+  transcriptFile: string;
 }
 
 // Add this enum at the top of the file or in a separate types file
@@ -31,7 +31,8 @@ export function PodcastPlayer({
   audioSrc, 
   podcastName, 
   episodeNumber,
-  podcastImage 
+  podcastImage,
+  transcriptFile
 }: PodcastPlayerProps) {
   // Add new state for tracking player state
   const [playerState, setPlayerState] = useState<PlayerState>(PlayerState.INITIAL);
@@ -94,6 +95,17 @@ export function PodcastPlayer({
     setPlayerState(PlayerState.AI_RESPONDING);
 
     try {
+      // Check if we have a transcript file path
+      if (!transcriptFile) {
+        throw new Error('No transcript file available');
+      }
+
+      // Fetch the transcript
+      const transcript = await fetchTranscript(transcriptFile);
+      if (!transcript) {
+        throw new Error('Failed to load transcript');
+      }
+
       const response = await fetch('/api/openai/stream', {
         method: 'POST',
         headers: {
@@ -102,7 +114,7 @@ export function PodcastPlayer({
         body: JSON.stringify({ 
           prompt: {
             ...podcastQAStreamPrompt,
-            userPrompt: podcastQAStreamPrompt.userPrompt(podcastTranscript, text)
+            userPrompt: podcastQAStreamPrompt.userPrompt(transcript, text)
           }
         }),
       });
@@ -115,7 +127,9 @@ export function PodcastPlayer({
       }
     } catch (error) {
       console.error('Error:', error);
-      setPlayerState(PlayerState.INITIAL); // Reset state on error
+      setPlayerState(PlayerState.INITIAL);
+      // Optionally show an error message to the user
+      // setErrorMessage('Failed to process your question. Please try again.');
     }
   };
 
@@ -225,6 +239,17 @@ export function PodcastPlayer({
             </Button>
           </>
         );
+    }
+  };
+
+  const fetchTranscript = async (transcriptFile: string) => {
+    try {
+      const response = await fetch(transcriptFile);
+      if (!response.ok) throw new Error('Failed to fetch transcript');
+      return await response.text();
+    } catch (error) {
+      console.error('Error fetching transcript:', error);
+      return '';
     }
   };
 
