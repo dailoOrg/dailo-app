@@ -1,104 +1,6 @@
 {
   "podcasts": [
     {
-      "id": "ai-frontiers",
-      "title": "AI Frontiers",
-      "description": "Exploring the latest developments in artificial intelligence, machine learning, and their real-world applications",
-      "image": "/images/ai-frontiers.png",
-      "episodes": [
-        {
-          "id": 1,
-          "title": "Introduction to Artificial Intelligence (Short Intro)",
-          "episodeNumber": "01",
-          "description": "Introduction to AI: what it is, why it matters, and its transformative potential",
-          "audioFile": "/audio/ai-frontiers/episode1.mp3",
-          "transcriptFile": "/transcripts/ai-frontiers/episode1.txt",
-          "duration": "5:09"
-        },
-        {
-          "id": 2,
-          "title": "History and Evolution of AI",
-          "episodeNumber": "02",
-          "description": "Trace the origins of AI, from symbolic AI to machine learning and neural networks",
-          "audioFile": "/audio/ai-frontiers/episode2.mp3",
-          "transcriptFile": "/transcripts/ai-frontiers/episode2.txt",
-          "duration": "8:14"
-        },
-        {
-          "id": 3,
-          "title": "Machine Learning: The Foundation of Modern AI",
-          "episodeNumber": "03",
-          "description": "Define machine learning and its core idea of learning from data rather than explicit programming",
-          "audioFile": "/audio/ai-frontiers/episode3.mp3",
-          "transcriptFile": "/transcripts/ai-frontiers/episode3.txt",
-          "duration": "10:40"
-        },
-        {
-          "id": 4,
-          "title": "Neural Networks: The Basics",
-          "episodeNumber": "04",
-          "description": "Explain how neural networks mimic the human brain using nodes, weights, and layers",
-          "audioFile": "/audio/ai-frontiers/episode4.mp3",
-          "transcriptFile": "/transcripts/ai-frontiers/episode4.txt",
-          "duration": "10:14"
-        },
-        {
-          "id": 5,
-          "title": "Deep Learning and Advanced Architectures",
-          "episodeNumber": "05",
-          "description": "Explore the leap from simple neural networks to deep learning",
-          "audioFile": "/audio/ai-frontiers/episode5.mp3",
-          "transcriptFile": "/transcripts/ai-frontiers/episode5.txt",
-          "duration": "10:26"
-        },
-        {
-          "id": 6,
-          "title": "Transformer Architecture",
-          "episodeNumber": "06",
-          "description": "Dive into the mechanics of transformers: self-attention, positional encoding, and sequence processing",
-          "audioFile": "/audio/ai-frontiers/episode6.mp3",
-          "transcriptFile": "/transcripts/ai-frontiers/episode6.txt",
-          "duration": "12:14"
-        },
-        {
-          "id": 7,
-          "title": "Large Language Models (LLMs)",
-          "episodeNumber": "07",
-          "description": "Define LLMs and explain their role in natural language processing",
-          "audioFile": "/audio/ai-frontiers/episode7.mp3",
-          "transcriptFile": "/transcripts/ai-frontiers/episode7.txt",
-          "duration": "14:59"
-        },
-        {
-          "id": 8,
-          "title": "Pretraining, Fine-Tuning, and Optimization",
-          "episodeNumber": "08",
-          "description": "Pretraining: How LLMs are trained on diverse datasets to learn language patterns",
-          "audioFile": "/audio/ai-frontiers/episode8.mp3",
-          "transcriptFile": "/transcripts/ai-frontiers/episode8.txt",
-          "duration": "10:29"
-        },
-        {
-          "id": 9,
-          "title": "Limitations and Bias in AI Systems",
-          "episodeNumber": "09",
-          "description": "Examine ethical and technical limitations, such as bias in training data and potential misuse",
-          "audioFile": "/audio/ai-frontiers/episode9.mp3",
-          "transcriptFile": "/transcripts/ai-frontiers/episode9.txt",
-          "duration": "8:34"
-        },
-        {
-          "id": 10,
-          "title": "Applications and Future of AI",
-          "episodeNumber": "10",
-          "description": "Real-world applications in chatbots, healthcare, creative industries, and more",
-          "audioFile": "/audio/ai-frontiers/episode10.mp3",
-          "transcriptFile": "/transcripts/ai-frontiers/episode10.txt",
-          "duration": "13:02"
-        }
-      ]
-    },
-    {
       "id": "blockchain-decoded",
       "title": "Blockchain Decoded",
       "description": "Understanding blockchain technology, cryptocurrencies, and their impact on the future of finance",
@@ -106,93 +8,93 @@
       "episodes": [
         {
           "id": 1,
-          "title": "Blockchain Basics",
+          "title": "Introduction to Blockchain Technology (Short Intro)",
           "episodeNumber": "01",
-          "description": "Understanding the fundamentals of blockchain technology",
+          "description": "A brief overview of blockchain technology: what it is, why it matters, and its transformative potential. Set expectations for the course and highlight the importance of understanding its historical development.",
           "audioFile": "/audio/blockchain-decoded/episode1.mp3",
           "transcriptFile": "/transcripts/blockchain-decoded/episode1.txt",
-          "duration": "4:30"
+          "duration": "5:33"
         },
         {
           "id": 2,
-          "title": "Smart Contracts Deep Dive",
+          "title": "The Origins of Blockchain: Cryptography and Digital Cash",
           "episodeNumber": "02",
-          "description": "Exploring the power of automated blockchain contracts",
+          "description": "Explore the foundational concepts of cryptography, public/private keys, and hash functions. Trace the journey from early attempts at digital cash (e.g., DigiCash, Hashcash) to Bitcoin’s creation in 2008. Introduce Satoshi Nakamoto and the Bitcoin whitepaper as the origin of modern blockchain.",
           "audioFile": "/audio/blockchain-decoded/episode2.mp3",
           "transcriptFile": "/transcripts/blockchain-decoded/episode2.txt",
-          "duration": "7:45"
+          "duration": "7:26"
         },
         {
           "id": 3,
-          "title": "DeFi Revolution",
+          "title": "How Blockchain Works: The Ledger and Consensus",
           "episodeNumber": "03",
-          "description": "The rise of decentralized finance",
+          "description": "Explain what a blockchain is: a decentralized ledger of transactions. Introduce key terms: blocks, chains, nodes, and consensus mechanisms. Highlight Bitcoin’s Proof of Work (PoW) as the first consensus algorithm.",
           "audioFile": "/audio/blockchain-decoded/episode3.mp3",
           "transcriptFile": "/transcripts/blockchain-decoded/episode3.txt",
-          "duration": "8:20"
+          "duration": "10:16"
         },
         {
           "id": 4,
-          "title": "NFTs Explained",
+          "title": "Ethereum and the Rise of Smart Contracts",
           "episodeNumber": "04",
-          "description": "Understanding non-fungible tokens and digital ownership",
+          "description": "Transition to Ethereum, the second-generation blockchain, and its introduction of smart contracts. Explain how smart contracts expanded blockchain’s use cases beyond digital currency. Discuss the role of Vitalik Buterin in shaping Ethereum’s vision.",
           "audioFile": "/audio/blockchain-decoded/episode4.mp3",
           "transcriptFile": "/transcripts/blockchain-decoded/episode4.txt",
-          "duration": "6:55"
+          "duration": "10:21"
         },
         {
           "id": 5,
-          "title": "Cryptocurrency Mining",
+          "title": "Blockchain’s Key Features: Decentralization, Transparency, and Security",
           "episodeNumber": "05",
-          "description": "How crypto mining works and its environmental impact",
+          "description": "Dive deeper into the technical pillars that make blockchain unique: decentralization, immutability, and trustlessness. Explain the role of distributed nodes and cryptographic security.",
           "audioFile": "/audio/blockchain-decoded/episode5.mp3",
           "transcriptFile": "/transcripts/blockchain-decoded/episode5.txt",
-          "duration": "9:15"
+          "duration": "9:16"
         },
         {
           "id": 6,
-          "title": "Blockchain Security",
+          "title": "Evolution of Consensus Mechanisms",
           "episodeNumber": "06",
-          "description": "Security measures and best practices in blockchain",
+          "description": "Explore the evolution of consensus algorithms from PoW to Proof of Stake (PoS) and other variations like Delegated Proof of Stake (DPoS) and Practical Byzantine Fault Tolerance (PBFT). Discuss Ethereum’s transition to PoS (Ethereum 2.0) as a pivotal moment.",
           "audioFile": "/audio/blockchain-decoded/episode6.mp3",
           "transcriptFile": "/transcripts/blockchain-decoded/episode6.txt",
-          "duration": "7:40"
+          "duration": "8:16"
         },
         {
           "id": 7,
-          "title": "Enterprise Blockchain",
+          "title": "Scalability and Layer 2 Solutions",
           "episodeNumber": "07",
-          "description": "How businesses are adopting blockchain technology",
+          "description": "Address the scalability challenges of blockchains (e.g., Bitcoin and Ethereum). Introduce Layer 2 solutions like Lightning Network, rollups, and sidechains as ways to improve transaction speed and cost.",
           "audioFile": "/audio/blockchain-decoded/episode7.mp3",
           "transcriptFile": "/transcripts/blockchain-decoded/episode7.txt",
-          "duration": "8:10"
+          "duration": "10:06"
         },
         {
           "id": 8,
-          "title": "Blockchain Scalability",
+          "title": "Decentralized Finance (DeFi)",
           "episodeNumber": "08",
-          "description": "Addressing the challenges of blockchain growth",
+          "description": "Explain how DeFi emerged as a significant application of blockchain. Discuss decentralized exchanges, lending protocols, and stablecoins. Highlight the advantages and risks of the DeFi ecosystem.",
           "audioFile": "/audio/blockchain-decoded/episode8.mp3",
           "transcriptFile": "/transcripts/blockchain-decoded/episode8.txt",
-          "duration": "6:50"
+          "duration": "7:51"
         },
         {
           "id": 9,
-          "title": "Cross-Chain Integration",
+          "title": "Non-Fungible Tokens (NFTs) and Digital Ownership",
           "episodeNumber": "09",
-          "description": "Understanding blockchain interoperability",
+          "description": "Explore the rise of NFTs and how they enable digital ownership of assets. Discuss real-world applications of NFTs in art, gaming, and beyond. Reflect on the cultural and economic impact of NFTs.",
           "audioFile": "/audio/blockchain-decoded/episode9.mp3",
           "transcriptFile": "/transcripts/blockchain-decoded/episode9.txt",
-          "duration": "7:25"
+          "duration": "7:50"
         },
         {
           "id": 10,
-          "title": "Future of Blockchain",
-          "episodeNumber": "010",
-          "description": "Emerging trends and future applications",
+          "title": "Limitations, Challenges, and Criticisms of Blockchain",
+          "episodeNumber": "10",
+          "description": "Examine common criticisms: energy consumption, scalability issues, regulatory concerns, and centralization risks. Discuss potential solutions and ongoing developments to address these challenges.",
           "audioFile": "/audio/blockchain-decoded/episode10.mp3",
           "transcriptFile": "/transcripts/blockchain-decoded/episode10.txt",
-          "duration": "8:35"
+          "duration": "8:06"
         }
       ]
     },
@@ -204,93 +106,102 @@
       "episodes": [
         {
           "id": 1,
-          "title": "What is the Internet Computer?",
+          "title": "Introduction to the Internet Computer",
           "episodeNumber": "01",
-          "description": "Introduction to ICP and its core concepts",
+          "description": "A decentralized blockchain network that reimagines how we build and interact with the internet. Learn about ICP’s vision to replace centralized servers and cloud providers with a global, decentralized computing platform. Explore how it fits into the broader blockchain and Web3 ecosystem.",
           "audioFile": "/audio/icp-insights/episode1.mp3",
           "transcriptFile": "/transcripts/icp-insights/episode1.txt",
-          "duration": "4:15"
+          "duration": "7:25"
         },
         {
           "id": 2,
-          "title": "DFINITY Foundation",
+          "title": "The Evolution of the Internet and Blockchain",
           "episodeNumber": "02",
-          "description": "The organization behind the Internet Computer",
+          "description": "Trace the internet’s evolution, from static web pages to dynamic apps, and how blockchain technology emerged to decentralize trust. Understand the gaps in today’s internet infrastructure (centralization, data privacy), then it introduce ICP and explains why ICP seeks to address them.",
           "audioFile": "/audio/icp-insights/episode2.mp3",
           "transcriptFile": "/transcripts/icp-insights/episode2.txt",
-          "duration": "7:20"
+          "duration": "7:22"
         },
         {
           "id": 3,
-          "title": "ICP Tokenomics",
+          "title": "Decentralization and the Role of Blockchain in ICP",
           "episodeNumber": "03",
-          "description": "Understanding the ICP token ecosystem",
+          "description": "What decentralization means for the internet, and how blockchain networks achieve distributed consensus. Explain why decentralization is a cornerstone of ICP’s infrastructure and governance.",
           "audioFile": "/audio/icp-insights/episode3.mp3",
           "transcriptFile": "/transcripts/icp-insights/episode3.txt",
-          "duration": "8:45"
+          "duration": "9:19"
         },
         {
           "id": 4,
-          "title": "Building on ICP",
+          "title": "Smart Contracts Reimagined: Canisters",
           "episodeNumber": "04",
-          "description": "Developer tools and resources for ICP",
+          "description": "ICP’s advanced smart contracts that combine code and data for full-stack app development. Highlight the unique features of canisters, such as scalability, interactivity, and integration of both frontend and backend.",
           "audioFile": "/audio/icp-insights/episode4.mp3",
           "transcriptFile": "/transcripts/icp-insights/episode4.txt",
-          "duration": "9:10"
+          "duration": "8:26"
         },
         {
           "id": 5,
-          "title": "ICP Network Architecture",
+          "title": "Chain-Key Technology",
           "episodeNumber": "05",
-          "description": "Technical deep dive into ICP's infrastructure",
+          "description": "A breakthrough cryptographic innovation that powers the Internet Computer’s speed and scalability. Explore the technical underpinnings that enable rapid state updates and eliminate the need for large-scale data replication by users. Explain the importance of this in contrast to other blockchain projects.",
           "audioFile": "/audio/icp-insights/episode5.mp3",
           "transcriptFile": "/transcripts/icp-insights/episode5.txt",
-          "duration": "7:55"
+          "duration": "9:24"
         },
         {
           "id": 6,
-          "title": "ICP Smart Contracts",
+          "title": "The Network Nervous System (NNS)",
           "episodeNumber": "06",
-          "description": "Understanding canisters and smart contracts on ICP",
+          "description": "A decentralized governance mechanism that controls the Internet Computer. Explain how the NNS allows token holders to vote on network upgrades, resource allocation, and security policies. Explains the relevance of these governance structures in relation to traditional government structures.",
           "audioFile": "/audio/icp-insights/episode6.mp3",
           "transcriptFile": "/transcripts/icp-insights/episode6.txt",
-          "duration": "8:30"
+          "duration": "9:10"
         },
         {
           "id": 7,
-          "title": "ICP Governance",
+          "title": "Tokenomics of ICP",
           "episodeNumber": "07",
-          "description": "How decisions are made in the ICP ecosystem",
+          "description": "Understand the role of ICP tokens in maintaining the network, including computation fees, governance voting, and resource allocation. Discuss the sustainability of the token model and its impact on the ecosystem.",
           "audioFile": "/audio/icp-insights/episode7.mp3",
           "transcriptFile": "/transcripts/icp-insights/episode7.txt",
-          "duration": "6:40"
+          "duration": "6:39"
         },
         {
           "id": 8,
-          "title": "DApps on ICP",
+          "title": "Scaling the Internet Computer",
           "episodeNumber": "08",
-          "description": "Exploring decentralized applications on Internet Computer",
+          "description": "Independent blockchain networks within the ICP ecosystem. Highlight how ICP tackles blockchain scalability challenges differently from Ethereum or Bitcoin.",
           "audioFile": "/audio/icp-insights/episode8.mp3",
           "transcriptFile": "/transcripts/icp-insights/episode8.txt",
-          "duration": "7:50"
+          "duration": "7:29"
         },
         {
           "id": 9,
-          "title": "ICP Security Features",
+          "title": "Building on ICP: Developer Insights",
           "episodeNumber": "09",
-          "description": "Security mechanisms and protocols in ICP",
+          "description": "Programming languages (e.g., Motoko and Rust). Introduce ICP as a developer-friendly platform that lowers barriers to creating dApps with global reach.",
           "audioFile": "/audio/icp-insights/episode9.mp3",
           "transcriptFile": "/transcripts/icp-insights/episode9.txt",
-          "duration": "8:15"
+          "duration": "7:52"
         },
         {
           "id": 10,
-          "title": "ICP's Vision",
-          "episodeNumber": "010",
-          "description": "The future of Internet Computer and web3",
+          "title": "Applications of ICP: Real-World Use Cases",
+          "episodeNumber": "10",
+          "description": "Decentralized social media platforms. Showcase how ICP’s technology is already being applied and how it can disrupt various industries.",
           "audioFile": "/audio/icp-insights/episode10.mp3",
           "transcriptFile": "/transcripts/icp-insights/episode10.txt",
-          "duration": "9:00"
+          "duration": "7:35"
+        },
+        {
+          "id": 11,
+          "title": "The Future of the Internet Computer",
+          "episodeNumber": "11",
+          "description": "Long-term vision for a fully decentralized internet. Challenges ahead, including adoption and competition.",
+          "audioFile": "/audio/icp-insights/episode11.mp3",
+          "transcriptFile": "/transcripts/icp-insights/episode11.txt",
+          "duration": "10:30"
         }
       ]
     }
