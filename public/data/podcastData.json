@@ -8,83 +8,93 @@
       "episodes": [
         {
           "id": 1,
-          "title": "Introduction to Modern AI",
+          "title": "Introduction to Artificial Intelligence (Short Intro)",
           "episodeNumber": "01",
-          "description": "A beginner-friendly overview of artificial intelligence and its current state",
+          "description": "Introduction to AI: what it is, why it matters, and its transformative potential",
           "audioFile": "/audio/ai-frontiers/episode1.mp3",
-          "duration": "7:44"
+          "transcriptFile": "/transcripts/ai-frontiers/episode1.txt",
+          "duration": "5:09"
         },
         {
           "id": 2,
-          "title": "Large Language Models Explained",
+          "title": "History and Evolution of AI",
           "episodeNumber": "02",
-          "description": "Deep dive into LLMs and their impact on natural language processing",
+          "description": "Trace the origins of AI, from symbolic AI to machine learning and neural networks",
           "audioFile": "/audio/ai-frontiers/episode2.mp3",
-          "duration": "8:15"
+          "transcriptFile": "/transcripts/ai-frontiers/episode2.txt",
+          "duration": "8:14"
         },
         {
           "id": 3,
-          "title": "Computer Vision Breakthroughs",
+          "title": "Machine Learning: The Foundation of Modern AI",
           "episodeNumber": "03",
-          "description": "Recent advances in computer vision and image recognition",
+          "description": "Define machine learning and its core idea of learning from data rather than explicit programming",
           "audioFile": "/audio/ai-frontiers/episode3.mp3",
-          "duration": "7:30"
+          "transcriptFile": "/transcripts/ai-frontiers/episode3.txt",
+          "duration": "10:40"
         },
         {
           "id": 4,
-          "title": "AI Ethics and Responsibility",
+          "title": "Neural Networks: The Basics",
           "episodeNumber": "04",
-          "description": "Discussing ethical considerations in AI development",
+          "description": "Explain how neural networks mimic the human brain using nodes, weights, and layers",
           "audioFile": "/audio/ai-frontiers/episode4.mp3",
-          "duration": "9:20"
+          "transcriptFile": "/transcripts/ai-frontiers/episode4.txt",
+          "duration": "10:14"
         },
         {
           "id": 5,
-          "title": "AI in Healthcare",
+          "title": "Deep Learning and Advanced Architectures",
           "episodeNumber": "05",
-          "description": "How AI is transforming medical diagnosis and treatment",
+          "description": "Explore the leap from simple neural networks to deep learning",
           "audioFile": "/audio/ai-frontiers/episode5.mp3",
-          "duration": "6:45"
+          "transcriptFile": "/transcripts/ai-frontiers/episode5.txt",
+          "duration": "10:26"
         },
         {
           "id": 6,
-          "title": "Reinforcement Learning",
+          "title": "Transformer Architecture",
           "episodeNumber": "06",
-          "description": "Understanding how AI learns through trial and error",
+          "description": "Dive into the mechanics of transformers: self-attention, positional encoding, and sequence processing",
           "audioFile": "/audio/ai-frontiers/episode6.mp3",
-          "duration": "8:50"
+          "transcriptFile": "/transcripts/ai-frontiers/episode6.txt",
+          "duration": "12:14"
         },
         {
           "id": 7,
-          "title": "AI in Business",
+          "title": "Large Language Models (LLMs)",
           "episodeNumber": "07",
-          "description": "Applications of AI in modern business operations",
+          "description": "Define LLMs and explain their role in natural language processing",
           "audioFile": "/audio/ai-frontiers/episode7.mp3",
-          "duration": "7:15"
+          "transcriptFile": "/transcripts/ai-frontiers/episode7.txt",
+          "duration": "14:59"
         },
         {
           "id": 8,
-          "title": "Future of AI Assistants",
+          "title": "Pretraining, Fine-Tuning, and Optimization",
           "episodeNumber": "08",
-          "description": "The evolution and potential of AI personal assistants",
+          "description": "Pretraining: How LLMs are trained on diverse datasets to learn language patterns",
           "audioFile": "/audio/ai-frontiers/episode8.mp3",
-          "duration": "9:10"
+          "transcriptFile": "/transcripts/ai-frontiers/episode8.txt",
+          "duration": "10:29"
         },
         {
           "id": 9,
-          "title": "AI and Creativity",
+          "title": "Limitations and Bias in AI Systems",
           "episodeNumber": "09",
-          "description": "How AI is revolutionizing art, music, and creative industries",
+          "description": "Examine ethical and technical limitations, such as bias in training data and potential misuse",
           "audioFile": "/audio/ai-frontiers/episode9.mp3",
-          "duration": "6:30"
+          "transcriptFile": "/transcripts/ai-frontiers/episode9.txt",
+          "duration": "8:34"
         },
         {
           "id": 10,
-          "title": "The Road Ahead in AI",
-          "episodeNumber": "010",
-          "description": "Predictions and upcoming trends in artificial intelligence",
+          "title": "Applications and Future of AI",
+          "episodeNumber": "10",
+          "description": "Real-world applications in chatbots, healthcare, creative industries, and more",
           "audioFile": "/audio/ai-frontiers/episode10.mp3",
-          "duration": "8:40"
+          "transcriptFile": "/transcripts/ai-frontiers/episode10.txt",
+          "duration": "13:02"
         }
       ]
     },
@@ -100,6 +110,7 @@
           "episodeNumber": "01",
           "description": "Understanding the fundamentals of blockchain technology",
           "audioFile": "/audio/blockchain-decoded/episode1.mp3",
+          "transcriptFile": "/transcripts/blockchain-decoded/episode1.txt",
           "duration": "4:30"
         },
         {
@@ -108,6 +119,7 @@
           "episodeNumber": "02",
           "description": "Exploring the power of automated blockchain contracts",
           "audioFile": "/audio/blockchain-decoded/episode2.mp3",
+          "transcriptFile": "/transcripts/blockchain-decoded/episode2.txt",
           "duration": "7:45"
         },
         {
@@ -116,6 +128,7 @@
           "episodeNumber": "03",
           "description": "The rise of decentralized finance",
           "audioFile": "/audio/blockchain-decoded/episode3.mp3",
+          "transcriptFile": "/transcripts/blockchain-decoded/episode3.txt",
           "duration": "8:20"
         },
         {
@@ -124,6 +137,7 @@
           "episodeNumber": "04",
           "description": "Understanding non-fungible tokens and digital ownership",
           "audioFile": "/audio/blockchain-decoded/episode4.mp3",
+          "transcriptFile": "/transcripts/blockchain-decoded/episode4.txt",
           "duration": "6:55"
         },
         {
@@ -132,6 +146,7 @@
           "episodeNumber": "05",
           "description": "How crypto mining works and its environmental impact",
           "audioFile": "/audio/blockchain-decoded/episode5.mp3",
+          "transcriptFile": "/transcripts/blockchain-decoded/episode5.txt",
           "duration": "9:15"
         },
         {
@@ -140,6 +155,7 @@
           "episodeNumber": "06",
           "description": "Security measures and best practices in blockchain",
           "audioFile": "/audio/blockchain-decoded/episode6.mp3",
+          "transcriptFile": "/transcripts/blockchain-decoded/episode6.txt",
           "duration": "7:40"
         },
         {
@@ -148,6 +164,7 @@
           "episodeNumber": "07",
           "description": "How businesses are adopting blockchain technology",
           "audioFile": "/audio/blockchain-decoded/episode7.mp3",
+          "transcriptFile": "/transcripts/blockchain-decoded/episode7.txt",
           "duration": "8:10"
         },
         {
@@ -156,6 +173,7 @@
           "episodeNumber": "08",
           "description": "Addressing the challenges of blockchain growth",
           "audioFile": "/audio/blockchain-decoded/episode8.mp3",
+          "transcriptFile": "/transcripts/blockchain-decoded/episode8.txt",
           "duration": "6:50"
         },
         {
@@ -164,6 +182,7 @@
           "episodeNumber": "09",
           "description": "Understanding blockchain interoperability",
           "audioFile": "/audio/blockchain-decoded/episode9.mp3",
+          "transcriptFile": "/transcripts/blockchain-decoded/episode9.txt",
           "duration": "7:25"
         },
         {
@@ -172,6 +191,7 @@
           "episodeNumber": "010",
           "description": "Emerging trends and future applications",
           "audioFile": "/audio/blockchain-decoded/episode10.mp3",
+          "transcriptFile": "/transcripts/blockchain-decoded/episode10.txt",
           "duration": "8:35"
         }
       ]
@@ -188,6 +208,7 @@
           "episodeNumber": "01",
           "description": "Introduction to ICP and its core concepts",
           "audioFile": "/audio/icp-insights/episode1.mp3",
+          "transcriptFile": "/transcripts/icp-insights/episode1.txt",
           "duration": "4:15"
         },
         {
@@ -196,6 +217,7 @@
           "episodeNumber": "02",
           "description": "The organization behind the Internet Computer",
           "audioFile": "/audio/icp-insights/episode2.mp3",
+          "transcriptFile": "/transcripts/icp-insights/episode2.txt",
           "duration": "7:20"
         },
         {
@@ -204,6 +226,7 @@
           "episodeNumber": "03",
           "description": "Understanding the ICP token ecosystem",
           "audioFile": "/audio/icp-insights/episode3.mp3",
+          "transcriptFile": "/transcripts/icp-insights/episode3.txt",
           "duration": "8:45"
         },
         {
@@ -212,6 +235,7 @@
           "episodeNumber": "04",
           "description": "Developer tools and resources for ICP",
           "audioFile": "/audio/icp-insights/episode4.mp3",
+          "transcriptFile": "/transcripts/icp-insights/episode4.txt",
           "duration": "9:10"
         },
         {
@@ -220,6 +244,7 @@
           "episodeNumber": "05",
           "description": "Technical deep dive into ICP's infrastructure",
           "audioFile": "/audio/icp-insights/episode5.mp3",
+          "transcriptFile": "/transcripts/icp-insights/episode5.txt",
           "duration": "7:55"
         },
         {
@@ -228,6 +253,7 @@
           "episodeNumber": "06",
           "description": "Understanding canisters and smart contracts on ICP",
           "audioFile": "/audio/icp-insights/episode6.mp3",
+          "transcriptFile": "/transcripts/icp-insights/episode6.txt",
           "duration": "8:30"
         },
         {
@@ -236,6 +262,7 @@
           "episodeNumber": "07",
           "description": "How decisions are made in the ICP ecosystem",
           "audioFile": "/audio/icp-insights/episode7.mp3",
+          "transcriptFile": "/transcripts/icp-insights/episode7.txt",
           "duration": "6:40"
         },
         {
@@ -244,6 +271,7 @@
           "episodeNumber": "08",
           "description": "Exploring decentralized applications on Internet Computer",
           "audioFile": "/audio/icp-insights/episode8.mp3",
+          "transcriptFile": "/transcripts/icp-insights/episode8.txt",
           "duration": "7:50"
         },
         {
@@ -252,6 +280,7 @@
           "episodeNumber": "09",
           "description": "Security mechanisms and protocols in ICP",
           "audioFile": "/audio/icp-insights/episode9.mp3",
+          "transcriptFile": "/transcripts/icp-insights/episode9.txt",
           "duration": "8:15"
         },
         {
@@ -260,6 +289,7 @@
           "episodeNumber": "010",
           "description": "The future of Internet Computer and web3",
           "audioFile": "/audio/icp-insights/episode10.mp3",
+          "transcriptFile": "/transcripts/icp-insights/episode10.txt",
           "duration": "9:00"
         }
       ]
