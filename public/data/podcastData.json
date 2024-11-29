@@ -1,6 +1,104 @@
 {
   "podcasts": [
     {
+      "id": "ai-frontiers",
+      "title": "AI Frontiers",
+      "description": "Exploring the latest developments in artificial intelligence, machine learning, and their real-world applications",
+      "image": "/images/ai-frontiers.png",
+      "episodes": [
+        {
+          "id": 1,
+          "title": "Introduction to Artificial Intelligence (Short Intro)",
+          "episodeNumber": "01",
+          "description": "Introduction to AI: what it is, why it matters, and its transformative potential",
+          "audioFile": "/audio/ai-frontiers/episode1.mp3",
+          "transcriptFile": "/transcripts/ai-frontiers/episode1.txt",
+          "duration": "5:09"
+        },
+        {
+          "id": 2,
+          "title": "History and Evolution of AI",
+          "episodeNumber": "02",
+          "description": "Trace the origins of AI, from symbolic AI to machine learning and neural networks",
+          "audioFile": "/audio/ai-frontiers/episode2.mp3",
+          "transcriptFile": "/transcripts/ai-frontiers/episode2.txt",
+          "duration": "8:14"
+        },
+        {
+          "id": 3,
+          "title": "Machine Learning: The Foundation of Modern AI",
+          "episodeNumber": "03",
+          "description": "Define machine learning and its core idea of learning from data rather than explicit programming",
+          "audioFile": "/audio/ai-frontiers/episode3.mp3",
+          "transcriptFile": "/transcripts/ai-frontiers/episode3.txt",
+          "duration": "10:40"
+        },
+        {
+          "id": 4,
+          "title": "Neural Networks: The Basics",
+          "episodeNumber": "04",
+          "description": "Explain how neural networks mimic the human brain using nodes, weights, and layers",
+          "audioFile": "/audio/ai-frontiers/episode4.mp3",
+          "transcriptFile": "/transcripts/ai-frontiers/episode4.txt",
+          "duration": "10:14"
+        },
+        {
+          "id": 5,
+          "title": "Deep Learning and Advanced Architectures",
+          "episodeNumber": "05",
+          "description": "Explore the leap from simple neural networks to deep learning",
+          "audioFile": "/audio/ai-frontiers/episode5.mp3",
+          "transcriptFile": "/transcripts/ai-frontiers/episode5.txt",
+          "duration": "10:26"
+        },
+        {
+          "id": 6,
+          "title": "Transformer Architecture",
+          "episodeNumber": "06",
+          "description": "Dive into the mechanics of transformers: self-attention, positional encoding, and sequence processing",
+          "audioFile": "/audio/ai-frontiers/episode6.mp3",
+          "transcriptFile": "/transcripts/ai-frontiers/episode6.txt",
+          "duration": "12:14"
+        },
+        {
+          "id": 7,
+          "title": "Large Language Models (LLMs)",
+          "episodeNumber": "07",
+          "description": "Define LLMs and explain their role in natural language processing",
+          "audioFile": "/audio/ai-frontiers/episode7.mp3",
+          "transcriptFile": "/transcripts/ai-frontiers/episode7.txt",
+          "duration": "14:59"
+        },
+        {
+          "id": 8,
+          "title": "Pretraining, Fine-Tuning, and Optimization",
+          "episodeNumber": "08",
+          "description": "Pretraining: How LLMs are trained on diverse datasets to learn language patterns",
+          "audioFile": "/audio/ai-frontiers/episode8.mp3",
+          "transcriptFile": "/transcripts/ai-frontiers/episode8.txt",
+          "duration": "10:29"
+        },
+        {
+          "id": 9,
+          "title": "Limitations and Bias in AI Systems",
+          "episodeNumber": "09",
+          "description": "Examine ethical and technical limitations, such as bias in training data and potential misuse",
+          "audioFile": "/audio/ai-frontiers/episode9.mp3",
+          "transcriptFile": "/transcripts/ai-frontiers/episode9.txt",
+          "duration": "8:34"
+        },
+        {
+          "id": 10,
+          "title": "Applications and Future of AI",
+          "episodeNumber": "10",
+          "description": "Real-world applications in chatbots, healthcare, creative industries, and more",
+          "audioFile": "/audio/ai-frontiers/episode10.mp3",
+          "transcriptFile": "/transcripts/ai-frontiers/episode10.txt",
+          "duration": "13:02"
+        }
+      ]
+    },
+    {
       "id": "blockchain-decoded",
       "title": "Blockchain Decoded",
       "description": "Understanding blockchain technology, cryptocurrencies, and their impact on the future of finance",
