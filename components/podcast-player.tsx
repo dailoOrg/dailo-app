@@ -254,8 +254,8 @@ export function PodcastPlayer({
   };
 
   return (
-    <div className="p-4 bg-black">
-      <div className="flex items-start space-x-6">
+    <div className="py-2 md:py-4 bg-black">
+      <div className="flex items-start space-x-2 md:space-x-6">
         {/* Podcast Image */}
         <div className="flex-shrink-0">
           <img 
@@ -268,13 +268,15 @@ export function PodcastPlayer({
         {/* Main Content */}
         <div className="flex-grow">
           <div className="flex justify-between items-center mb-4">
-            <div>
-              <h2 className="text-sm text-gray-400 mb-1">
-                {podcastName} {episodeNumber && `#${episodeNumber}`}
-              </h2>
-              <h1 className="text-lg font-semibold text-white">{title}</h1>
+            <div className="flex-shrink min-w-0 overflow-hidden" style={{ maxWidth: 'calc(100vw - 240px)' }}>
+              <div className="flex-shrink min-w-0">
+                <h2 className="text-sm text-gray-400 mb-1 truncate">
+                  {podcastName} {episodeNumber && `#${episodeNumber}`}
+                </h2>
+                <h1 className="md:text-lg text-sm truncate font-semibold text-white">{title}</h1>
+              </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 flex-shrink-0 ml-2">
               {renderControls()}
             </div>
           </div>
