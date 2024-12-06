@@ -27,22 +27,26 @@ export function LandingPage() {
         </p>
       </div>
 
-      <div className="space-y-6">
+      <div className="-mx-4 px-4 flex md:flex-col flex-row overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none gap-4 md:gap-6 pb-6 md:pb-0 items-stretch">
         {podcastData.podcasts.map((podcast) => (
-          <Link href={`/podcasts/${podcast.id}`} key={podcast.id} className="block">
-            <Card className="hover:shadow-md transition-shadow bg-[#F5F5F4] p-4">
-              <div className="flex items-start gap-6">
+          <Link 
+            href={`/podcasts/${podcast.id}`} 
+            key={podcast.id} 
+            className="block w-64 min-w-[280px] md:min-w-0 md:w-full snap-center"
+          >
+            <Card className="hover:shadow-md transition-shadow bg-[#F5F5F4] p-4 h-full">
+              <div className="flex md:flex-row flex-col gap-4 md:gap-6 h-full">
                 <img 
                   src={podcast.image} 
                   alt={`${podcast.title} cover`}
-                  className="w-48 h-48 rounded-sm"
+                  className="w-full md:w-48 aspect-square md:h-48 rounded-sm flex-shrink-0"
                 />
-                <div className="flex flex-col justify-between h-48 py-2">
-                  <div>
+                <div className="flex flex-col flex-1">
+                  <div className="flex-1">
                     <h2 className="font-medium text-black text-base mb-1">{podcast.title}</h2>
                     <p className="text-sm text-black">{podcast.description}</p>
                   </div>
-                  <p className="text-xs font-medium text-black">
+                  <p className="text-xs font-medium text-black mt-4">
                     {podcast.episodes.length} EPISODES
                   </p>
                 </div>
