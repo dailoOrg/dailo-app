@@ -7,6 +7,12 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Dailo",
   description: "Interactive AI-Powered Podcast Learning Experience.",
+  applicationName: "Dailo",
+  appleWebApp: {
+    title: "Dailo",
+    statusBarStyle: "default",
+    capable: true,
+  },
   openGraph: {
     title: "Dailo",
     description: "Interactive AI-Powered Podcast Learning Experience.",
@@ -28,9 +34,13 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: "/images/favicon/favicon.ico", sizes: "any" },
+      { url: "/images/favicon/favicon.svg", type: "image/svg+xml" },
       { url: "/images/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/images/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/images/favicon/favicon.png", sizes: "48x48", type: "image/png" },
     ],
+    shortcut: "/images/favicon/favicon.ico",
     apple: [
       { url: "/images/favicon/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
