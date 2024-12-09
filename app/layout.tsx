@@ -34,11 +34,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/images/favicon/favicon.ico", sizes: "any" },
+      { url: "/images/favicon/favicon.ico" },
       { url: "/images/favicon/favicon.svg", type: "image/svg+xml" },
       { url: "/images/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/images/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/images/favicon/favicon.png", sizes: "48x48", type: "image/png" },
+      { url: "/images/favicon/favicon-48x48.png", sizes: "48x48", type: "image/png" },
     ],
     shortcut: "/images/favicon/favicon.ico",
     apple: [
@@ -65,6 +65,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/images/favicon/favicon.ico" sizes="any" />
+        <link rel="icon" href="/images/favicon/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/images/favicon/apple-touch-icon.png" />
+        <link rel="manifest" href="/images/favicon/site.webmanifest" />
+      </head>
       <body className={inter.className}>
         <main>{children}</main>
       </body>
