@@ -26,17 +26,17 @@ enum PlayerState {
   AI_RESPONDING = 'AI_RESPONDING'
 }
 
-export function PodcastPlayer({ 
-  title, 
-  audioSrc, 
-  podcastName, 
+export function PodcastPlayer({
+  title,
+  audioSrc,
+  podcastName,
   episodeNumber,
   podcastImage,
   transcriptFile
 }: PodcastPlayerProps) {
   // Add new state for tracking player state
   const [playerState, setPlayerState] = useState<PlayerState>(PlayerState.INITIAL);
-  
+
   // Existing states - some of these might be redundant now
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
@@ -85,15 +85,40 @@ export function PodcastPlayer({
     }
   }
 
-  const handleAskQuestion = async (text: string) => {
-    if (audioRef.current) {
-      audioRef.current.pause();
+  const handleAskClick = () => {
+    if (isRecording) {
+      // If we're already recording, stop the recording
+      setIsRecording(false);
+      setPlayerState(PlayerState.WAITING_FOR_RESPONSE);
+    } else {
+      // If we're not recording, pause any audio and start recording
+      if (audioRef.current) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      }
+      setTranscribedText('');
+      setIsRecording(true);
+      setPlayerState(PlayerState.RECORDING_QUESTION);
     }
-    setIsPlaying(false);
-    setShowAiResponse(true);
-    setHasPlayedResponse(false);
-    setPlayerState(PlayerState.AI_RESPONDING);
+  };
 
+  const handleTranscription = async (text: string) => {
+    // First update the transcribed text
+    setTranscribedText(text);
+
+    // Set state to waiting before making the API call
+    setPlayerState(PlayerState.WAITING_FOR_RESPONSE);
+
+    // Only proceed with asking question if we have text
+    if (text.trim()) {
+      await handleAskQuestion(text);
+    } else {
+      // If no text, reset to initial state
+      setPlayerState(PlayerState.INITIAL);
+    }
+  };
+
+  const handleAskQuestion = async (text: string) => {
     try {
       // Check if we have a transcript file path
       if (!transcriptFile) {
@@ -106,12 +131,16 @@ export function PodcastPlayer({
         throw new Error('Failed to load transcript');
       }
 
+      setShowAiResponse(true);
+      setHasPlayedResponse(false);
+      setPlayerState(PlayerState.AI_RESPONDING);
+
       const response = await fetch('/api/openai/stream', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           prompt: {
             ...podcastQAStreamPrompt,
             userPrompt: podcastQAStreamPrompt.userPrompt(transcript, text)
@@ -120,7 +149,7 @@ export function PodcastPlayer({
       });
 
       if (!response.ok) throw new Error('Stream request failed');
-      
+
       const stream = response.body;
       if (stream) {
         setCurrentStream(stream);
@@ -130,22 +159,6 @@ export function PodcastPlayer({
       setPlayerState(PlayerState.INITIAL);
       // Optionally show an error message to the user
       // setErrorMessage('Failed to process your question. Please try again.');
-    }
-  };
-
-  const handleTranscription = (text: string) => {
-    setTranscribedText(text);
-    handleAskQuestion(text);
-  };
-
-  const handleAskClick = () => {
-    if (isRecording) {
-      setIsRecording(false);
-      setPlayerState(PlayerState.WAITING_FOR_RESPONSE);
-    } else {
-      setTranscribedText('');
-      setIsRecording(true);
-      setPlayerState(PlayerState.RECORDING_QUESTION);
     }
   };
 
@@ -160,7 +173,7 @@ export function PodcastPlayer({
       if (audio.duration) {
         setDuration(audio.duration);
       }
-      
+
       // Also set up a timeout to check again after a short delay
       const timer = setTimeout(() => {
         if (audio.duration) {
@@ -177,8 +190,8 @@ export function PodcastPlayer({
     switch (playerState) {
       case PlayerState.AI_RESPONDING:
         return (
-          <Button 
-            size="icon" 
+          <Button
+            size="icon"
             variant="secondary"
             className="rounded-full bg-white hover:bg-gray-100"
             onClick={() => {
@@ -190,22 +203,22 @@ export function PodcastPlayer({
             <X className="h-6 w-6 text-black" />
           </Button>
         );
-      
+
       case PlayerState.RECORDING_QUESTION:
         return (
-          <Button 
-            size="icon" 
+          <Button
+            size="icon"
             onClick={handleAskClick}
             className="rounded-full bg-red-500 hover:bg-red-600"
           >
             <Circle className="h-4 w-4 fill-white" />
           </Button>
         );
-      
+
       case PlayerState.WAITING_FOR_RESPONSE:
         return (
-          <Button 
-            size="icon" 
+          <Button
+            size="icon"
             variant="secondary"
             className="rounded-full bg-white hover:bg-gray-100"
             onClick={() => {
@@ -216,22 +229,22 @@ export function PodcastPlayer({
             <X className="h-6 w-6 text-black" />
           </Button>
         );
-      
+
       default:
         return (
           <>
-            <Button 
-              size="icon" 
+            <Button
+              size="icon"
               onClick={togglePlayPause}
               className="rounded-full bg-white hover:bg-gray-100"
             >
-              {isPlaying ? 
-                <Pause className="h-6 w-6 text-black" /> : 
+              {isPlaying ?
+                <Pause className="h-6 w-6 text-black" /> :
                 <Play className="h-6 w-6 text-black" />
               }
             </Button>
-            <Button 
-              size="icon" 
+            <Button
+              size="icon"
               onClick={handleAskClick}
               className="rounded-full bg-white hover:bg-gray-100"
             >
@@ -258,8 +271,8 @@ export function PodcastPlayer({
       <div className="flex items-start space-x-2 md:space-x-6">
         {/* Podcast Image */}
         <div className="flex-shrink-0">
-          <img 
-            src={podcastImage} 
+          <img
+            src={podcastImage}
             alt={podcastName}
             className="w-24 h-24 rounded-lg object-cover"
           />
@@ -308,16 +321,16 @@ export function PodcastPlayer({
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={() => setIsPlaying(false)}
       />
-      
+
       {/* Hidden but functional audio components */}
       <div className="hidden">
-        <AudioInput 
+        <AudioInput
           isRecording={isRecording}
           onTranscription={handleTranscription}
           onRecordingComplete={handleRecordingComplete}
         />
         {showAiResponse && (
-          <StreamingAudioOutput 
+          <StreamingAudioOutput
             stream={currentStream}
             onComplete={() => {
               setHasPlayedResponse(true);
