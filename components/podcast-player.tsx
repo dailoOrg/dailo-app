@@ -1,6 +1,6 @@
-"use client";
+'use clientgit ;
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from 'react';
 import {
   Play,
   Pause,
@@ -10,12 +10,12 @@ import {
   Mic,
   Circle,
   X,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { podcastQAStreamPrompt } from "@/prompts/podcastQAStreamPrompt";
-import AudioInput from "./audio/AudioInput";
-import StreamingAudioOutput from "./audio/StreamingAudioOutput";
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
+import { podcastQAStreamPrompt } from '@/prompts/podcastQAStreamPrompt';
+import AudioInput from './audio/AudioInput';
+import StreamingAudioOutput from './audio/StreamingAudioOutput';
 
 interface PodcastPlayerProps {
   title: string;
@@ -55,7 +55,7 @@ export function PodcastPlayer({
   const [showAiResponse, setShowAiResponse] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isRecording, setIsRecording] = useState(false);
-  const [transcribedText, setTranscribedText] = useState("");
+  const [transcribedText, setTranscribedText] = useState('');
   const [hasPlayedResponse, setHasPlayedResponse] = useState(false);
   const [currentStream, setCurrentStream] =
     useState<ReadableStream<Uint8Array> | null>(null);
@@ -84,7 +84,7 @@ export function PodcastPlayer({
   // Set duration when audio loads
   const handleLoadedMetadata = () => {
     if (audioRef.current) {
-      console.log("Audio duration:", audioRef.current.duration);
+      console.log('Audio duration:', audioRef.current.duration);
       setDuration(audioRef.current.duration);
     }
   };
@@ -138,7 +138,7 @@ export function PodcastPlayer({
         setCurrentStream(stream);
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error('Error:', error);
       setPlayerState(PlayerState.INITIAL);
       // Optionally show an error message to the user
       // setErrorMessage('Failed to process your question. Please try again.');
@@ -164,7 +164,7 @@ export function PodcastPlayer({
       setIsRecording(false);
       setPlayerState(PlayerState.WAITING_FOR_RESPONSE);
     } else {
-      setTranscribedText("");
+      setTranscribedText('');
       setIsRecording(true);
       setPlayerState(PlayerState.RECORDING_QUESTION);
     }
@@ -267,43 +267,43 @@ export function PodcastPlayer({
   const fetchTranscript = async (transcriptFile: string) => {
     try {
       const response = await fetch(transcriptFile);
-      if (!response.ok) throw new Error("Failed to fetch transcript");
+      if (!response.ok) throw new Error('Failed to fetch transcript');
       return await response.text();
     } catch (error) {
-      console.error("Error fetching transcript:", error);
-      return "";
+      console.error('Error fetching transcript:', error);
+      return '';
     }
   };
 
   return (
-    <div className="py-2 md:py-4 bg-black">
-      <div className="flex items-start space-x-2 md:space-x-6">
+    <div className='py-2 md:py-4 bg-black'>
+      <div className='flex items-start space-x-2 md:space-x-6'>
         {/* Podcast Image */}
-        <div className="flex-shrink-0">
+        <div className='flex-shrink-0'>
           <img
             src={podcastImage}
             alt={podcastName}
-            className="w-24 h-24 rounded-lg object-cover"
+            className='w-24 h-24 rounded-lg object-cover'
           />
         </div>
 
         {/* Main Content */}
-        <div className="flex-grow">
-          <div className="flex justify-between items-center mb-4">
+        <div className='flex-grow'>
+          <div className='flex justify-between items-center mb-4'>
             <div
-              className="flex-shrink min-w-0 overflow-hidden"
-              style={{ maxWidth: "calc(100vw - 240px)" }}
+              className='flex-shrink min-w-0 overflow-hidden'
+              style={{ maxWidth: 'calc(100vw - 240px)' }}
             >
-              <div className="flex-shrink min-w-0">
-                <h2 className="text-sm text-gray-400 mb-1 truncate">
+              <div className='flex-shrink min-w-0'>
+                <h2 className='text-sm text-gray-400 mb-1 truncate'>
                   {podcastName} {episodeNumber && `#${episodeNumber}`}
                 </h2>
-                <h1 className="md:text-lg text-sm truncate font-semibold text-white">
+                <h1 className='md:text-lg text-sm truncate font-semibold text-white'>
                   {title}
                 </h1>
               </div>
             </div>
-            <div className="flex items-center space-x-2 flex-shrink-0 ml-2">
+            <div className='flex items-center space-x-2 flex-shrink-0 ml-2'>
               {renderControls()}
             </div>
           </div>
@@ -316,13 +316,13 @@ export function PodcastPlayer({
               max={duration || 100}
               step={0.1}
               onValueChange={(value) => handleSliderChange(value)}
-              className="mb-2 [&_.relative]:bg-gray-800 [&_[data-disabled]]:bg-gray-800 [&_.absolute]:bg-red-500 [&_[role=slider]]:bg-red-500"
+              className='mb-2 [&_.relative]:bg-gray-800 [&_[data-disabled]]:bg-gray-800 [&_.absolute]:bg-red-500 [&_[role=slider]]:bg-red-500'
             />
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-400">
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-gray-400'>
                 {formatTime(currentTime)}
               </span>
-              <span className="text-sm text-gray-400">
+              <span className='text-sm text-gray-400'>
                 {formatTime(duration)}
               </span>
             </div>
@@ -341,7 +341,7 @@ export function PodcastPlayer({
       />
 
       {/* Hidden but functional audio components */}
-      <div className="hidden">
+      <div className='hidden'>
         <AudioInput
           isRecording={isRecording}
           onTranscription={handleTranscription}
