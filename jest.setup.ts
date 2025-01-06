@@ -6,3 +6,12 @@ global.Request = class MockRequest extends Request {
     super(input, init);
   }
 } as any;
+
+// Silence console.error during tests
+beforeAll(() => {
+  jest.spyOn(console, "error").mockImplementation(() => {});
+});
+
+afterAll(() => {
+  jest.restoreAllMocks();
+});

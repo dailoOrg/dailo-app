@@ -25,7 +25,10 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error("OpenAI API error:", error);
+    const isTest = process.env.NODE_ENV === "test";
+    if (!isTest) {
+      console.error("OpenAI API error:", error);
+    }
     return NextResponse.json(
       { error: "Error generating speech" },
       { status: 500 }
