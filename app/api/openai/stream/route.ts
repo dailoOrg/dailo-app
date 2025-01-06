@@ -17,8 +17,8 @@ export async function POST(req: Request) {
       model: prompt.model,
       temperature: prompt.temperature,
       messages: [
-        { role: 'system', content: prompt.systemPrompt },
-        { role: 'user', content: prompt.userPrompt },
+        { role: "system", content: prompt.systemPrompt },
+        { role: "user", content: prompt.userPrompt },
       ],
       stream: true,
     });
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       headers: {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
-        Connection: 'keep-alive',
+        'Connection': 'keep-alive',
       },
     });
   } catch (error) {
