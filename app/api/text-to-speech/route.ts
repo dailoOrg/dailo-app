@@ -1,7 +1,7 @@
-import { OpenAI } from "openai";
-import { NextResponse } from "next/server";
+import { OpenAI } from 'openai';
+import { NextResponse } from 'next/server';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -12,8 +12,8 @@ export async function POST(request: Request) {
     const { text } = await request.json();
 
     const response = await openai.audio.speech.create({
-      model: "tts-1",
-      voice: "alloy",
+      model: 'tts-1',
+      voice: 'alloy',
       input: text,
     });
 
@@ -21,16 +21,16 @@ export async function POST(request: Request) {
 
     return new NextResponse(audioData, {
       headers: {
-        "Content-Type": "audio/mpeg",
+        'Content-Type': 'audio/mpeg',
       },
     });
   } catch (error) {
-    const isTest = process.env.NODE_ENV === "test";
+    const isTest = process.env.NODE_ENV === 'test';
     if (!isTest) {
-      console.error("OpenAI API error:", error);
+      console.error('OpenAI API error:', error);
     }
     return NextResponse.json(
-      { error: "Error generating speech" },
+      { error: 'Error generating speech' },
       { status: 500 }
     );
   }
