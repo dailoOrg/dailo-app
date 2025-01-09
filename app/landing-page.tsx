@@ -25,9 +25,6 @@ export function LandingPage() {
         <p className="text-sm text-black">
           * Ask questions, get summaries, and interact with podcast content in real-time using our AI assistant.
         </p>
-        <p className="text-sm text-black">
-          test
-        </p>
       </div>
 
       <div className="-mx-4 px-4 flex md:flex-col flex-row overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none gap-4 md:gap-6 pb-6 md:pb-0 items-stretch">

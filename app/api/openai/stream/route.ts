@@ -1,9 +1,9 @@
-import { OpenAI } from 'openai';
-import { NextResponse } from 'next/server';
+import { OpenAI } from "openai";
+import { NextResponse } from "next/server";
 
 // Add export config to mark as dynamic
-export const dynamic = 'force-dynamic';
-export const runtime = 'edge'; // Optional: Use edge runtime for better streaming
+export const dynamic = "force-dynamic";
+export const runtime = "edge"; // Optional: Use edge runtime for better streaming
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     const stream = new ReadableStream({
       async start(controller) {
         for await (const chunk of response) {
-          const content = chunk.choices[0]?.delta?.content || '';
+          const content = chunk.choices[0]?.delta?.content || "";
           controller.enqueue(new TextEncoder().encode(content));
         }
         controller.close();
@@ -36,16 +36,16 @@ export async function POST(req: Request) {
 
     return new Response(stream, {
       headers: {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
       },
     });
   } catch (error) {
-    const isTest = process.env.NODE_ENV === 'test';
+    const isTest = process.env.NODE_ENV === "test";
     if (!isTest) {
-      console.error('OpenAI API error:', error);
+      console.error("OpenAI API error:", error);
     }
-    return new Response('Error streaming response', { status: 500 });
+    return new Response("Error streaming response", { status: 500 });
   }
 }
