@@ -72,7 +72,6 @@ export function PodcastPlayer({
   // Set duration when audio loads
   const handleLoadedMetadata = () => {
     if (audioRef.current) {
-      console.log('Audio duration:', audioRef.current.duration);
       setDuration(audioRef.current.duration);
     }
   };
@@ -105,49 +104,27 @@ export function PodcastPlayer({
   };
 
   const handleTranscription = async (text: string) => {
-    console.log('Transcription received:', {
-      text,
-      length: text?.length || 0,
-      isEmpty: !text || text.trim() === ''
-    });
-
     setTranscribedText(text);
     setPlayerState(PlayerState.WAITING_FOR_RESPONSE);
 
     if (text?.trim()) {
-      console.log('About to ask question with text:', text);
       await handleAskQuestion(text);
     } else {
-      console.log('Empty transcription received, not proceeding with question');
       setPlayerState(PlayerState.INITIAL);
     }
   };
 
   const handleAskQuestion = async (text: string) => {
     try {
-      console.log('Starting handleAskQuestion with:', {
-        text,
-        transcriptFile: !!transcriptFile
-      });
-
       if (!transcriptFile) {
         throw new Error('No transcript file available');
       }
 
       const transcript = await fetchTranscript(transcriptFile);
-      console.log('Transcript loaded:', {
-        success: !!transcript,
-        preview: transcript?.slice(0, 100)
-      });
 
       setShowAiResponse(true);
       setHasPlayedResponse(false);
       setPlayerState(PlayerState.AI_RESPONDING);
-
-      console.log('Sending to OpenAI stream:', {
-        text,
-        transcript: transcript?.slice(0, 100) + '...' // Just show first 100 chars
-      });
 
       const response = await fetch('/api/openai/stream', {
         method: 'POST',
@@ -169,10 +146,7 @@ export function PodcastPlayer({
         setCurrentStream(stream);
       }
     } catch (error) {
-      console.error('Error:', error);
       setPlayerState(PlayerState.INITIAL);
-      // Optionally show an error message to the user
-      // setErrorMessage('Failed to process your question. Please try again.');
     }
   };
 

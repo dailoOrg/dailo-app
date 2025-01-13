@@ -11,7 +11,7 @@ const openai = new OpenAI({
 
 export async function POST(req: Request) {
   const { prompt } = await req.json();
-  console.log(" QUESTION TO STREAMING API:", prompt.userPrompt);
+  // console.log(" QUESTION TO STREAMING API:", prompt.userPrompt);
 
   try {
     const response = await openai.chat.completions.create({
