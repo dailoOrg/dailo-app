@@ -87,7 +87,6 @@ export function PodcastPlayer({
 
   const handleAskClick = () => {
     if (isRecording) {
-      // If we're already recording, stop the recording
       setIsRecording(false);
       setPlayerState(PlayerState.WAITING_FOR_RESPONSE);
     } else {
@@ -96,6 +95,9 @@ export function PodcastPlayer({
         audioRef.current.pause();
         setIsPlaying(false);
       }
+      // Also stop any AI response audio that might be playing
+      setShowAiResponse(false);
+      setCurrentStream(null);
       setTranscribedText('');
       setIsRecording(true);
       setPlayerState(PlayerState.RECORDING_QUESTION);
@@ -103,37 +105,49 @@ export function PodcastPlayer({
   };
 
   const handleTranscription = async (text: string) => {
-    // First update the transcribed text
-    setTranscribedText(text);
+    console.log('Transcription received:', {
+      text,
+      length: text?.length || 0,
+      isEmpty: !text || text.trim() === ''
+    });
 
-    // Set state to waiting before making the API call
+    setTranscribedText(text);
     setPlayerState(PlayerState.WAITING_FOR_RESPONSE);
 
-    // Only proceed with asking question if we have text
-    if (text.trim()) {
+    if (text?.trim()) {
+      console.log('About to ask question with text:', text);
       await handleAskQuestion(text);
     } else {
-      // If no text, reset to initial state
+      console.log('Empty transcription received, not proceeding with question');
       setPlayerState(PlayerState.INITIAL);
     }
   };
 
   const handleAskQuestion = async (text: string) => {
     try {
-      // Check if we have a transcript file path
+      console.log('Starting handleAskQuestion with:', {
+        text,
+        transcriptFile: !!transcriptFile
+      });
+
       if (!transcriptFile) {
         throw new Error('No transcript file available');
       }
 
-      // Fetch the transcript
       const transcript = await fetchTranscript(transcriptFile);
-      if (!transcript) {
-        throw new Error('Failed to load transcript');
-      }
+      console.log('Transcript loaded:', {
+        success: !!transcript,
+        preview: transcript?.slice(0, 100)
+      });
 
       setShowAiResponse(true);
       setHasPlayedResponse(false);
       setPlayerState(PlayerState.AI_RESPONDING);
+
+      console.log('Sending to OpenAI stream:', {
+        text,
+        transcript: transcript?.slice(0, 100) + '...' // Just show first 100 chars
+      });
 
       const response = await fetch('/api/openai/stream', {
         method: 'POST',

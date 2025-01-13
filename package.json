@@ -22,15 +22,17 @@
     "openai": "^4.56.1",
     "react": "^18",
     "react-dom": "^18",
+    "recorder-js": "^1.0.7",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "web-audio-recorder-js": "^0.0.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^20",
-    "@types/react": "^18",
+    "@types/react": "^18.3.18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.7",

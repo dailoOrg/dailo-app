@@ -1,69 +1,49 @@
-import { useRef } from 'react';
+import { useEffect } from 'react';
+import { useWebAudioRecorder } from '@/hooks/useWebAudioRecorder';
 
 interface AudioInputProps {
-  isRecording: boolean;
-  onTranscription: (text: string) => void;
-  onRecordingComplete: () => void;
+    isRecording: boolean;
+    onTranscription: (text: string) => void;
+    onRecordingComplete: () => void;
 }
 
 export default function AudioInput({ isRecording, onTranscription, onRecordingComplete }: AudioInputProps) {
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
+    const { startRecording, stopRecording } = useWebAudioRecorder({
+        onRecordingComplete: async (audioBlob: Blob) => {
+            try {
+                const formData = new FormData();
+                formData.append('audio', audioBlob, 'audio.wav');
 
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      chunksRef.current = [];
+                const response = await fetch('/api/transcribe', {
+                    method: 'POST',
+                    body: formData,
+                });
 
-      mediaRecorder.ondataavailable = (e) => {
-        chunksRef.current.push(e.data);
-      };
+                if (!response.ok) {
+                    throw new Error(`Transcription failed: ${response.status}`);
+                }
 
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(chunksRef.current, { type: 'audio/mpeg' });
-        await handleUpload(audioBlob);
-        stream.getTracks().forEach(track => track.stop());
-        onRecordingComplete();
-      };
+                const { text } = await response.json();
+                onTranscription(text);
+            } catch (err) {
+                console.error('Transcription error:', err);
+            } finally {
+                onRecordingComplete();
+            }
+        },
+        onError: (error: Error) => {
+            console.error("Recording error:", error);
+            onRecordingComplete();
+        }
+    });
 
-      mediaRecorder.start();
-    } catch (err) {
-      console.error('Error accessing microphone:', err);
-      onRecordingComplete();
-    }
-  };
+    useEffect(() => {
+        if (isRecording) {
+            startRecording();
+        } else {
+            stopRecording();
+        }
+    }, [isRecording]);
 
-  const stopRecording = () => {
-    if (mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop();
-    }
-  };
-
-  const handleUpload = async (audioBlob: Blob) => {
-    const formData = new FormData();
-    formData.append('file', audioBlob, 'audio.mp3');
-
-    try {
-      const response = await fetch('/api/transcribe', {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await response.json();
-      if (data.text) {
-        onTranscription(data.text);
-      }
-    } catch (err) {
-      console.error('Error uploading audio:', err);
-    }
-  };
-
-  if (isRecording) {
-    startRecording();
-  } else if (mediaRecorderRef.current) {
-    stopRecording();
-  }
-
-  return null;
+    return null;
 } 

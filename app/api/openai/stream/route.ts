@@ -11,6 +11,7 @@ const openai = new OpenAI({
 
 export async function POST(req: Request) {
   const { prompt } = await req.json();
+  console.log(" QUESTION TO STREAMING API:", prompt.userPrompt);
 
   try {
     const response = await openai.chat.completions.create({
@@ -38,7 +39,7 @@ export async function POST(req: Request) {
       headers: {
         "Content-Type": "text/event-stream",
         "Cache-Control": "no-cache",
-        "Connection": "keep-alive",
+        Connection: "keep-alive",
       },
     });
   } catch (error) {
