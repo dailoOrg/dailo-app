@@ -21,10 +21,17 @@ interface PodcastPlayerProps {
 enum PlayerState {
   INITIAL = 'INITIAL',
   PLAYING_PODCAST = 'PLAYING_PODCAST',
+  PREPARING_RECORDING = 'PREPARING_RECORDING',
   RECORDING_QUESTION = 'RECORDING_QUESTION',
   WAITING_FOR_RESPONSE = 'WAITING_FOR_RESPONSE',
   AI_RESPONDING = 'AI_RESPONDING'
 }
+
+// Add this helper function at the top of the file
+const isSafari = () => {
+  const ua = navigator.userAgent.toLowerCase();
+  return ua.includes('safari') && !ua.includes('chrome');
+};
 
 export function PodcastPlayer({
   title,
@@ -98,8 +105,13 @@ export function PodcastPlayer({
       setShowAiResponse(false);
       setCurrentStream(null);
       setTranscribedText('');
-      setIsRecording(true);
-      setPlayerState(PlayerState.RECORDING_QUESTION);
+
+      // Show preparing state for all browsers, but with different delays
+      setPlayerState(PlayerState.PREPARING_RECORDING);
+      setTimeout(() => {
+        setIsRecording(true);
+        setPlayerState(PlayerState.RECORDING_QUESTION);
+      }, isSafari() ? 1500 : 500); // 1.5s for Safari, 0.5s for others
     }
   };
 
@@ -176,6 +188,33 @@ export function PodcastPlayer({
   // Helper function to render controls based on state
   const renderControls = () => {
     switch (playerState) {
+      case PlayerState.PREPARING_RECORDING:
+        return (
+          <Button
+            size="icon"
+            disabled
+            className="rounded-full bg-gray-300"
+          >
+            <span className="animate-spin">
+              <svg className="h-5 w-5" viewBox="0 0 24 24">
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+            </span>
+          </Button>
+        );
+
       case PlayerState.AI_RESPONDING:
         return (
           <Button

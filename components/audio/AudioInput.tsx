@@ -11,9 +11,16 @@ export default function AudioInput({ isRecording, onTranscription, onRecordingCo
   const { startRecording, stopRecording } = useWebAudioRecorder({
     onRecordingComplete: async (audioBlob: Blob) => {
       try {
+        console.log('AudioInput: Got recording blob', {
+          size: audioBlob.size,
+          type: audioBlob.type,
+          timestamp: new Date().toISOString()
+        });
+
         const formData = new FormData();
         formData.append('audio', audioBlob, 'audio.wav');
 
+        console.log('AudioInput: Sending to transcription API...');
         const response = await fetch('/api/transcribe', {
           method: 'POST',
           body: formData,
@@ -24,22 +31,26 @@ export default function AudioInput({ isRecording, onTranscription, onRecordingCo
         }
 
         const { text } = await response.json();
+        console.log('AudioInput: Received transcription:', { text });
+
         if (!text?.trim()) {
           throw new Error('Empty transcription received');
         }
 
         onTranscription(text);
       } catch (err) {
+        console.error('AudioInput: Error in recording/transcription process:', err);
         onRecordingComplete();
       } finally {
         onRecordingComplete();
       }
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('AudioInput: Recording error:', error);
       onRecordingComplete();
     },
     onEncoderLoaded: () => {
-      // Ready to record
+      console.log('AudioInput: Encoder loaded and ready');
     }
   });
 

@@ -103,13 +103,17 @@ export function useWebAudioRecorder({
         workerDir: "/lib/web-audio-recorder/",
         encoding: "wav",
         numChannels: 1,
-        onEncoderLoading: () => {},
-        onEncoderLoaded: () => {},
+        onEncoderLoading: () => {
+          console.log("WebAudioRecorder: Encoder loading...");
+        },
+        onEncoderLoaded: () => {
+          console.log("WebAudioRecorder: Encoder loaded");
+        },
         options: {
           timeLimit: 120, // 2-minute limit
           encodeAfterRecord: true,
           progressInterval: 1000,
-          bufferSize: 2048, // Smaller buffer size for better Safari compatibility
+          bufferSize: 4096, // Increased buffer size for Safari
           wav: {
             mimeType: "audio/wav",
           },
@@ -117,20 +121,38 @@ export function useWebAudioRecorder({
       });
 
       recorder.onComplete = (_recorder: any, blob: Blob) => {
+        console.log("WebAudioRecorder: Recording complete", {
+          blobSize: blob.size,
+          blobType: blob.type,
+          duration: audioContext.currentTime,
+        });
         onRecordingComplete(blob);
         setIsRecording(false);
         cleanupRecording();
       };
 
       recorder.onError = (_recorder: any, message: string) => {
+        console.error("WebAudioRecorder: Error during recording:", message);
         onError(new Error(message));
         setIsRecording(false);
         cleanupRecording();
       };
 
       recorderRef.current = recorder;
+      console.log("WebAudioRecorder: Setup complete, waiting before start...");
+
+      // Add a small delay before starting recording (Safari needs this)
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Increased delay to 1 second
+
+      // Resume the audio context (required for Safari)
+      console.log("WebAudioRecorder: Resuming audio context...");
+      await audioContext.resume();
+      console.log("WebAudioRecorder: Audio context state:", audioContext.state);
+
+      console.log("WebAudioRecorder: Starting recording...");
       recorder.startRecording();
       setIsRecording(true);
+      console.log("WebAudioRecorder: Recording started");
     } catch (error) {
       onError(
         error instanceof Error ? error : new Error("Failed to start recording")
