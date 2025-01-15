@@ -3,6 +3,8 @@ import { useRef, useEffect, useState } from "react";
 declare global {
   interface Window {
     WebAudioRecorder: any;
+    AudioContext: typeof AudioContext;
+    webkitAudioContext: typeof AudioContext;
   }
 }
 
@@ -77,12 +79,23 @@ export function useWebAudioRecorder({
   }, []);
 
   const startRecording = async () => {
+    // Check if we're in a browser environment
+    if (typeof window === "undefined") {
+      console.log("WebAudioRecorder: Not in browser environment");
+      return;
+    }
+
     if (!isScriptLoaded) {
       onError(new Error("Recorder not initialized"));
       return;
     }
 
     try {
+      // Check if getUserMedia is available
+      if (!navigator?.mediaDevices?.getUserMedia) {
+        throw new Error("getUserMedia not supported");
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           channelCount: 1,
@@ -92,8 +105,18 @@ export function useWebAudioRecorder({
         },
       });
 
+      // Check if AudioContext is available
+      if (
+        typeof AudioContext === "undefined" &&
+        typeof webkitAudioContext === "undefined"
+      ) {
+        throw new Error("AudioContext not supported");
+      }
+
       streamRef.current = stream;
-      const audioContext = new AudioContext({
+      const AudioContextClass =
+        window.AudioContext || window.webkitAudioContext;
+      const audioContext = new AudioContextClass({
         sampleRate: 44100,
       });
       audioContextRef.current = audioContext;
@@ -101,6 +124,11 @@ export function useWebAudioRecorder({
 
       // Create a promise to ensure encoder is fully loaded
       const encoderLoadedPromise = new Promise((resolve, reject) => {
+        if (!window.WebAudioRecorder) {
+          reject(new Error("WebAudioRecorder not loaded"));
+          return;
+        }
+
         const recorder = new window.WebAudioRecorder(source, {
           workerDir: "/lib/web-audio-recorder/",
           encoding: "wav",
@@ -113,6 +141,7 @@ export function useWebAudioRecorder({
             resolve(recorder);
           },
           onEncoderError: (err) => {
+            console.error("WebAudioRecorder: Encoder error:", err);
             reject(err);
           },
           options: {
@@ -127,38 +156,47 @@ export function useWebAudioRecorder({
         });
       });
 
-      // Wait for encoder to be fully loaded before proceeding
-      const recorder = await encoderLoadedPromise;
-      recorderRef.current = recorder;
+      try {
+        // Wait for encoder to be fully loaded before proceeding
+        const recorder = await encoderLoadedPromise;
+        recorderRef.current = recorder;
 
-      recorder.onComplete = (_recorder: any, blob: Blob) => {
-        console.log("WebAudioRecorder: Recording complete", {
-          blobSize: blob.size,
-          blobType: blob.type,
-          duration: audioContext.currentTime,
-        });
-        onRecordingComplete(blob);
-        setIsRecording(false);
-        cleanupRecording();
-      };
+        recorder.onComplete = (_recorder: any, blob: Blob) => {
+          console.log("WebAudioRecorder: Recording complete", {
+            blobSize: blob.size,
+            blobType: blob.type,
+            duration: audioContext.currentTime,
+          });
+          onRecordingComplete(blob);
+          setIsRecording(false);
+          cleanupRecording();
+        };
 
-      recorder.onError = (_recorder: any, message: string) => {
-        console.error("WebAudioRecorder: Error during recording:", message);
-        onError(new Error(message));
-        setIsRecording(false);
-        cleanupRecording();
-      };
+        recorder.onError = (_recorder: any, message: string) => {
+          console.error("WebAudioRecorder: Error during recording:", message);
+          onError(new Error(message));
+          setIsRecording(false);
+          cleanupRecording();
+        };
 
-      // Resume audio context
-      await audioContext.resume();
-      console.log("WebAudioRecorder: Audio context state:", audioContext.state);
+        // Resume audio context
+        await audioContext.resume();
+        console.log(
+          "WebAudioRecorder: Audio context state:",
+          audioContext.state
+        );
 
-      // Start recording
-      console.log("WebAudioRecorder: Starting recording...");
-      recorder.startRecording();
-      setIsRecording(true);
-      console.log("WebAudioRecorder: Recording started");
+        // Start recording
+        console.log("WebAudioRecorder: Starting recording...");
+        recorder.startRecording();
+        setIsRecording(true);
+        console.log("WebAudioRecorder: Recording started");
+      } catch (encoderError) {
+        console.error("WebAudioRecorder: Encoder setup failed:", encoderError);
+        throw encoderError;
+      }
     } catch (error) {
+      console.error("WebAudioRecorder: Recording setup failed:", error);
       onError(
         error instanceof Error ? error : new Error("Failed to start recording")
       );
