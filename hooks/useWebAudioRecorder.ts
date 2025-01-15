@@ -94,31 +94,42 @@ export function useWebAudioRecorder({
 
       streamRef.current = stream;
       const audioContext = new AudioContext({
-        sampleRate: 44100, // Standard sample rate that works well across browsers
+        sampleRate: 44100,
       });
       audioContextRef.current = audioContext;
       const source = audioContext.createMediaStreamSource(stream);
 
-      const recorder = new window.WebAudioRecorder(source, {
-        workerDir: "/lib/web-audio-recorder/",
-        encoding: "wav",
-        numChannels: 1,
-        onEncoderLoading: () => {
-          console.log("WebAudioRecorder: Encoder loading...");
-        },
-        onEncoderLoaded: () => {
-          console.log("WebAudioRecorder: Encoder loaded");
-        },
-        options: {
-          timeLimit: 120, // 2-minute limit
-          encodeAfterRecord: true,
-          progressInterval: 1000,
-          bufferSize: 4096, // Increased buffer size for Safari
-          wav: {
-            mimeType: "audio/wav",
+      // Create a promise to ensure encoder is fully loaded
+      const encoderLoadedPromise = new Promise((resolve, reject) => {
+        const recorder = new window.WebAudioRecorder(source, {
+          workerDir: "/lib/web-audio-recorder/",
+          encoding: "wav",
+          numChannels: 1,
+          onEncoderLoading: () => {
+            console.log("WebAudioRecorder: Encoder loading...");
           },
-        },
+          onEncoderLoaded: () => {
+            console.log("WebAudioRecorder: Encoder loaded");
+            resolve(recorder);
+          },
+          onEncoderError: (err) => {
+            reject(err);
+          },
+          options: {
+            timeLimit: 120,
+            encodeAfterRecord: true,
+            progressInterval: 1000,
+            bufferSize: 4096,
+            wav: {
+              mimeType: "audio/wav",
+            },
+          },
+        });
       });
+
+      // Wait for encoder to be fully loaded before proceeding
+      const recorder = await encoderLoadedPromise;
+      recorderRef.current = recorder;
 
       recorder.onComplete = (_recorder: any, blob: Blob) => {
         console.log("WebAudioRecorder: Recording complete", {
@@ -138,17 +149,11 @@ export function useWebAudioRecorder({
         cleanupRecording();
       };
 
-      recorderRef.current = recorder;
-      console.log("WebAudioRecorder: Setup complete, waiting before start...");
-
-      // Add a small delay before starting recording (Safari needs this)
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Increased delay to 1 second
-
-      // Resume the audio context (required for Safari)
-      console.log("WebAudioRecorder: Resuming audio context...");
+      // Resume audio context
       await audioContext.resume();
       console.log("WebAudioRecorder: Audio context state:", audioContext.state);
 
+      // Start recording
       console.log("WebAudioRecorder: Starting recording...");
       recorder.startRecording();
       setIsRecording(true);
