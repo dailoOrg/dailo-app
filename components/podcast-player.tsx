@@ -96,22 +96,20 @@ export function PodcastPlayer({
       setIsRecording(false);
       setPlayerState(PlayerState.WAITING_FOR_RESPONSE);
     } else {
-      // If we're not recording, pause any audio and start recording
       if (audioRef.current) {
         audioRef.current.pause();
         setIsPlaying(false);
       }
-      // Also stop any AI response audio that might be playing
       setShowAiResponse(false);
       setCurrentStream(null);
       setTranscribedText('');
 
-      // Show preparing state for all browsers, but with different delays
+      // Show preparing state
       setPlayerState(PlayerState.PREPARING_RECORDING);
-      setTimeout(() => {
-        setIsRecording(true);
-        setPlayerState(PlayerState.RECORDING_QUESTION);
-      }, isSafari() ? 1500 : 500); // 1.5s for Safari, 0.5s for others
+
+      // Instead of delaying, start getUserMedia right away to satisfy iOS's requirement
+      setIsRecording(true);
+      setPlayerState(PlayerState.RECORDING_QUESTION);
     }
   };
 
