@@ -93,10 +93,20 @@ export function useWebAudioRecorder({
       mediaRecorder.start();
       setIsRecording(true);
     } catch (error) {
-      console.error("Failed to start recording:", error);
-      onError(
-        error instanceof Error ? error : new Error("Failed to start recording")
-      );
+      if (error instanceof DOMException && error.name === "NotAllowedError") {
+        console.warn("User blocked microphone access or context not allowed.");
+        onError(
+          new Error("Microphone access not allowed. Please grant permission.")
+        );
+      } else {
+        console.error("Failed to start recording:", error);
+        onError(
+          error instanceof Error
+            ? error
+            : new Error("Failed to start recording")
+        );
+      }
+
       cleanupRecording();
     }
   };
