@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 // Add export config to mark as dynamic
 export const dynamic = "force-dynamic";
-export const runtime = "edge"; // Optional: Use edge runtime for better streaming
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,

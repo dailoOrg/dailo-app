@@ -4,7 +4,9 @@ declare global {
   interface Window {
     WebAudioRecorder: any;
     AudioContext: typeof AudioContext;
-    webkitAudioContext: typeof AudioContext;
+    webkitAudioContext: {
+      new (contextOptions?: AudioContextOptions): AudioContext;
+    };
   }
 }
 
@@ -14,11 +16,28 @@ interface UseWebAudioRecorderOptions {
   onEncoderLoaded?: () => void;
 }
 
+interface WebAudioRecorder {
+  startRecording: () => void;
+  finishRecording: () => void;
+  onComplete: (recorder: any, blob: Blob) => void;
+  onError: (recorder: any, message: string) => void;
+}
+
+const isBrowser = typeof window !== "undefined" && window.AudioContext;
+
 export function useWebAudioRecorder({
   onRecordingComplete,
   onError,
   onEncoderLoaded,
 }: UseWebAudioRecorderOptions) {
+  if (!isBrowser) {
+    return {
+      startRecording: () => console.log("Not available in server environment"),
+      stopRecording: () => console.log("Not available in server environment"),
+      isRecording: false,
+    };
+  }
+
   const audioContextRef = useRef<AudioContext | null>(null);
   const recorderRef = useRef<any>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -59,7 +78,7 @@ export function useWebAudioRecorder({
         await Promise.all([loadMainScript, loadWavScript]);
         setIsScriptLoaded(true);
         onEncoderLoaded?.();
-      } catch (error) {
+      } catch (error: unknown) {
         onError(
           error instanceof Error
             ? error
@@ -106,16 +125,14 @@ export function useWebAudioRecorder({
       });
 
       // Check if AudioContext is available
-      if (
-        typeof AudioContext === "undefined" &&
-        typeof webkitAudioContext === "undefined"
-      ) {
+      const AudioContextClass = (window.AudioContext ||
+        (window as any).webkitAudioContext) as typeof AudioContext;
+
+      if (!AudioContextClass) {
         throw new Error("AudioContext not supported");
       }
 
       streamRef.current = stream;
-      const AudioContextClass =
-        window.AudioContext || window.webkitAudioContext;
       const audioContext = new AudioContextClass({
         sampleRate: 44100,
       });
@@ -123,38 +140,40 @@ export function useWebAudioRecorder({
       const source = audioContext.createMediaStreamSource(stream);
 
       // Create a promise to ensure encoder is fully loaded
-      const encoderLoadedPromise = new Promise((resolve, reject) => {
-        if (!window.WebAudioRecorder) {
-          reject(new Error("WebAudioRecorder not loaded"));
-          return;
-        }
+      const encoderLoadedPromise = new Promise<WebAudioRecorder>(
+        (resolve, reject) => {
+          if (!window.WebAudioRecorder) {
+            reject(new Error("WebAudioRecorder not loaded"));
+            return;
+          }
 
-        const recorder = new window.WebAudioRecorder(source, {
-          workerDir: "/lib/web-audio-recorder/",
-          encoding: "wav",
-          numChannels: 1,
-          onEncoderLoading: () => {
-            console.log("WebAudioRecorder: Encoder loading...");
-          },
-          onEncoderLoaded: () => {
-            console.log("WebAudioRecorder: Encoder loaded");
-            resolve(recorder);
-          },
-          onEncoderError: (err) => {
-            console.error("WebAudioRecorder: Encoder error:", err);
-            reject(err);
-          },
-          options: {
-            timeLimit: 120,
-            encodeAfterRecord: true,
-            progressInterval: 1000,
-            bufferSize: 4096,
-            wav: {
-              mimeType: "audio/wav",
+          const recorder = new window.WebAudioRecorder(source, {
+            workerDir: "/lib/web-audio-recorder/",
+            encoding: "wav",
+            numChannels: 1,
+            onEncoderLoading: () => {
+              console.log("WebAudioRecorder: Encoder loading...");
             },
-          },
-        });
-      });
+            onEncoderLoaded: () => {
+              console.log("WebAudioRecorder: Encoder loaded");
+              resolve(recorder);
+            },
+            onEncoderError: (err: Error | string) => {
+              console.error("WebAudioRecorder: Encoder error:", err);
+              reject(err);
+            },
+            options: {
+              timeLimit: 120,
+              encodeAfterRecord: true,
+              progressInterval: 1000,
+              bufferSize: 4096,
+              wav: {
+                mimeType: "audio/wav",
+              },
+            },
+          });
+        }
+      );
 
       try {
         // Wait for encoder to be fully loaded before proceeding
