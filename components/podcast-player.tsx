@@ -104,12 +104,20 @@ export function PodcastPlayer({
       setCurrentStream(null);
       setTranscribedText('');
 
-      // Show preparing state
-      setPlayerState(PlayerState.PREPARING_RECORDING);
-
-      // Instead of delaying, start getUserMedia right away to satisfy iOS's requirement
+      // Remove the delay completely - start recording immediately on click
       setIsRecording(true);
       setPlayerState(PlayerState.RECORDING_QUESTION);
+
+      // Request permission right away when the mic button is clicked
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(() => {
+          console.log("Permission granted on click");
+        })
+        .catch(error => {
+          console.error("Permission error on click:", error);
+          setIsRecording(false);
+          setPlayerState(PlayerState.INITIAL);
+        });
     }
   };
 
