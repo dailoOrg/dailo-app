@@ -43,6 +43,7 @@ export function useWebAudioRecorder({
 
   const startRecording = async () => {
     try {
+      console.log("Starting recording...");
       // Request microphone access
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
@@ -52,6 +53,8 @@ export function useWebAudioRecorder({
           autoGainControl: true,
         },
       });
+
+      console.log("Got media stream:", stream.id);
 
       streamRef.current = stream;
       chunksRef.current = [];
