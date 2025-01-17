@@ -10,7 +10,11 @@ const openai = new OpenAI({
 
 export async function POST(req: Request) {
   const { prompt } = await req.json();
-  console.log(" QUESTION TO STREAMING API:", prompt.userPrompt);
+  console.log("Stream API: Starting request with prompt:", {
+    userPrompt: prompt.userPrompt,
+    model: prompt.model,
+    timestamp: new Date().toISOString(),
+  });
 
   try {
     const response = await openai.chat.completions.create({
@@ -23,13 +27,37 @@ export async function POST(req: Request) {
       stream: true,
     });
 
+    console.log("Stream API: Got initial response from OpenAI");
+
     // Create a ReadableStream
     const stream = new ReadableStream({
       async start(controller) {
+        let totalChunks = 0;
+        let totalContent = "";
+
         for await (const chunk of response) {
           const content = chunk.choices[0]?.delta?.content || "";
+          totalContent += content;
+          totalChunks++;
+
+          if (totalChunks % 10 === 0) {
+            // Log every 10 chunks
+            console.log("Stream API: Streaming progress:", {
+              chunksProcessed: totalChunks,
+              lastChunkLength: content.length,
+              totalContentLength: totalContent.length,
+            });
+          }
+
           controller.enqueue(new TextEncoder().encode(content));
         }
+
+        console.log("Stream API: Stream complete:", {
+          totalChunks,
+          finalContentLength: totalContent.length,
+          timestamp: new Date().toISOString(),
+        });
+
         controller.close();
       },
     });
@@ -42,10 +70,10 @@ export async function POST(req: Request) {
       },
     });
   } catch (error) {
-    const isTest = process.env.NODE_ENV === "test";
-    if (!isTest) {
-      console.error("OpenAI API error:", error);
-    }
+    console.error("Stream API Error:", {
+      error: error instanceof Error ? error.message : String(error),
+      timestamp: new Date().toISOString(),
+    });
     return new Response("Error streaming response", { status: 500 });
   }
 }
