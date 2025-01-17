@@ -92,16 +92,15 @@ export function useWebAudioRecorder({
       });
 
       // Add more detailed error logging
-      mediaRecorder.onerror = (event) => {
+      mediaRecorder.onerror = (event: Event) => {
+        const error = (event as any).error;
         console.error("MediaRecorder error:", {
-          error: event.error,
+          error,
           type: event.type,
-          message: event.error?.message,
+          message: error?.message || "Unknown error",
         });
         onError(
-          new Error(
-            `Recording failed: ${event.error?.message || "Unknown error"}`
-          )
+          new Error(`Recording failed: ${error?.message || "Unknown error"}`)
         );
         cleanupRecording();
       };
