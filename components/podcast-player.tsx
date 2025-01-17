@@ -133,24 +133,29 @@ export function PodcastPlayer({
     }
   }
 
-  const handleAskClick = () => {
+  const handleAskClick = async () => {
     if (isAudioRecording) {
       stopRecording();
       setPlayerState(PlayerState.WAITING_FOR_RESPONSE);
     } else {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        setIsPlaying(false);
+      try {
+        // Pause current audio and reset states
+        if (audioRef.current) {
+          audioRef.current.pause();
+          setIsPlaying(false);
+        }
+        setShowAiResponse(false);
+        setCurrentStream(null);
+        setTranscribedText('');
+
+        // Start recording immediately in the click handler
+        // Don't set PREPARING state since we're starting right away
+        await startRecording();  // Wait for recording to start
+        setPlayerState(PlayerState.RECORDING_QUESTION);
+      } catch (error) {
+        console.error('Failed to start recording:', error);
+        setPlayerState(PlayerState.INITIAL);
       }
-      setShowAiResponse(false);
-      setCurrentStream(null);
-      setTranscribedText('');
-
-      setPlayerState(PlayerState.PREPARING_RECORDING);
-
-      // Direct call to startRecording instead of setting isRecording state
-      startRecording();
-      setPlayerState(PlayerState.RECORDING_QUESTION);
     }
   };
 
