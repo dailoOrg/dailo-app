@@ -57,6 +57,12 @@ export function PodcastPlayer({
   const [currentStream, setCurrentStream] = useState<ReadableStream<Uint8Array> | null>(null);
   const [isProcessingRecording, setIsProcessingRecording] = useState(false);
 
+  // Add a ref to track if component is mounted
+  const isMountedRef = useRef(false);
+
+  // Add state to track if permissions were checked
+  const [permissionChecked, setPermissionChecked] = useState(false);
+
   // Add the web audio recorder hook
   const { startRecording, stopRecording, isRecording: isAudioRecording } = useWebAudioRecorder({
     onRecordingComplete: async (audioBlob: Blob) => {
@@ -137,7 +143,40 @@ export function PodcastPlayer({
     }
   }
 
+  useEffect(() => {
+    isMountedRef.current = true;
+
+    // Check permissions on mount
+    const checkPermissions = async () => {
+      try {
+        // Try to get a stream and immediately close it
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach(track => track.stop());
+        setPermissionChecked(true);
+      } catch (error) {
+        console.log('Initial permission check failed:', error);
+        setPermissionChecked(true);
+      }
+    };
+
+    // Only check permissions if the browser supports it
+    if (typeof navigator !== 'undefined' && navigator.mediaDevices) {
+      checkPermissions();
+    }
+
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  // Modify handleAskClick to check mounting and permissions
   const handleAskClick = async () => {
+    // Don't proceed if component is unmounted or permissions weren't checked
+    if (!isMountedRef.current || !permissionChecked) {
+      console.log('Component not ready or permissions not checked');
+      return;
+    }
+
     // Only check isProcessingRecording when starting a new recording
     if (!isAudioRecording && isProcessingRecording) {
       console.log('Recording in progress, please wait...');
@@ -145,12 +184,11 @@ export function PodcastPlayer({
     }
 
     if (isAudioRecording) {
-      // Don't set isProcessingRecording here - we want to allow stop
       stopRecording();
       setPlayerState(PlayerState.WAITING_FOR_RESPONSE);
     } else {
       try {
-        setIsProcessingRecording(true); // Only set when starting
+        setIsProcessingRecording(true);
 
         if (audioRef.current) {
           audioRef.current.pause();
@@ -160,12 +198,19 @@ export function PodcastPlayer({
         setCurrentStream(null);
         setTranscribedText('');
 
-        await startRecording();
-        setPlayerState(PlayerState.RECORDING_QUESTION);
+        // Wrap in mounted check
+        if (isMountedRef.current) {
+          await startRecording();
+          if (isMountedRef.current) { // Check again after async operation
+            setPlayerState(PlayerState.RECORDING_QUESTION);
+          }
+        }
       } catch (error) {
         console.error('Failed to start recording:', error);
-        setPlayerState(PlayerState.INITIAL);
-        setIsProcessingRecording(false); // Reset on error
+        if (isMountedRef.current) {
+          setPlayerState(PlayerState.INITIAL);
+          setIsProcessingRecording(false);
+        }
       }
     }
   };
@@ -247,6 +292,19 @@ export function PodcastPlayer({
 
   // Helper function to render controls based on state
   const renderControls = () => {
+    // Don't show recording button until permissions are checked
+    if (!permissionChecked) {
+      return (
+        <Button
+          size="icon"
+          disabled
+          className="rounded-full bg-gray-300"
+        >
+          <span className="animate-spin">...</span>
+        </Button>
+      );
+    }
+
     switch (playerState) {
       case PlayerState.PREPARING_RECORDING:
         return (
