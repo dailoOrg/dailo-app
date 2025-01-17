@@ -55,6 +55,7 @@ export function PodcastPlayer({
   const [transcribedText, setTranscribedText] = useState('');
   const [hasPlayedResponse, setHasPlayedResponse] = useState(false);
   const [currentStream, setCurrentStream] = useState<ReadableStream<Uint8Array> | null>(null);
+  const [isProcessingRecording, setIsProcessingRecording] = useState(false);
 
   // Add the web audio recorder hook
   const { startRecording, stopRecording, isRecording: isAudioRecording } = useWebAudioRecorder({
@@ -89,11 +90,14 @@ export function PodcastPlayer({
       } catch (err) {
         console.error('PodcastPlayer: Error in recording/transcription process:', err);
         handleRecordingComplete();
+      } finally {
+        setIsProcessingRecording(false);
       }
     },
     onError: (error) => {
       console.error('PodcastPlayer: Recording error:', error);
       handleRecordingComplete();
+      setIsProcessingRecording(false);
     }
   });
 
@@ -134,12 +138,20 @@ export function PodcastPlayer({
   }
 
   const handleAskClick = async () => {
+    // Only check isProcessingRecording when starting a new recording
+    if (!isAudioRecording && isProcessingRecording) {
+      console.log('Recording in progress, please wait...');
+      return;
+    }
+
     if (isAudioRecording) {
+      // Don't set isProcessingRecording here - we want to allow stop
       stopRecording();
       setPlayerState(PlayerState.WAITING_FOR_RESPONSE);
     } else {
       try {
-        // Pause current audio and reset states
+        setIsProcessingRecording(true); // Only set when starting
+
         if (audioRef.current) {
           audioRef.current.pause();
           setIsPlaying(false);
@@ -148,13 +160,12 @@ export function PodcastPlayer({
         setCurrentStream(null);
         setTranscribedText('');
 
-        // Start recording immediately in the click handler
-        // Don't set PREPARING state since we're starting right away
-        await startRecording();  // Wait for recording to start
+        await startRecording();
         setPlayerState(PlayerState.RECORDING_QUESTION);
       } catch (error) {
         console.error('Failed to start recording:', error);
         setPlayerState(PlayerState.INITIAL);
+        setIsProcessingRecording(false); // Reset on error
       }
     }
   };
