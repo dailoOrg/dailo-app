@@ -50,21 +50,15 @@ export function useWebAudioRecorder({
     try {
       console.log("Starting recording...");
 
-      // First check if we already have permission
-      const permissionStatus = await navigator.permissions.query({
-        name: "microphone" as PermissionName,
-      });
-      console.log("Microphone permission status:", permissionStatus.state);
-
-      // Request microphone access with more specific constraints
+      // Request microphone access (directly) with more specific constraints
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           channelCount: 1,
           echoCancellation: true,
           noiseSuppression: true,
           autoGainControl: true,
-          sampleRate: 48000, // Specify a higher sample rate
-          sampleSize: 16, // Use 16-bit samples
+          sampleRate: 48000,
+          sampleSize: 16,
         },
       });
 
