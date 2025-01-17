@@ -104,20 +104,12 @@ export function PodcastPlayer({
       setCurrentStream(null);
       setTranscribedText('');
 
-      // Remove the delay completely - start recording immediately on click
+      // Show preparing state
+      setPlayerState(PlayerState.PREPARING_RECORDING);
+
+      // Instead of delaying, start getUserMedia right away to satisfy iOS's requirement
       setIsRecording(true);
       setPlayerState(PlayerState.RECORDING_QUESTION);
-
-      // Request permission right away when the mic button is clicked
-      navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(() => {
-          console.log("Permission granted on click");
-        })
-        .catch(error => {
-          console.error("Permission error on click:", error);
-          setIsRecording(false);
-          setPlayerState(PlayerState.INITIAL);
-        });
     }
   };
 
@@ -140,6 +132,9 @@ export function PodcastPlayer({
 
       const transcript = await fetchTranscript(transcriptFile);
 
+      console.log('PodcastPlayer handleAskQuestion: userQuestion=', text);
+      console.log('PodcastPlayer handleAskQuestion: transcript (first 200 chars)=', transcript.slice(0, 200));
+
       setShowAiResponse(true);
       setHasPlayedResponse(false);
       setPlayerState(PlayerState.AI_RESPONDING);
@@ -156,6 +151,8 @@ export function PodcastPlayer({
           }
         }),
       });
+
+      console.log('PodcastPlayer handleAskQuestion: /api/openai/stream status=', response.status);
 
       if (!response.ok) throw new Error('Stream request failed');
 

@@ -17,14 +17,6 @@ export default function AudioInput({ isRecording, onTranscription, onRecordingCo
           timestamp: new Date().toISOString()
         });
 
-        const permissionStatus = await navigator.permissions.query({
-          name: 'microphone' as PermissionName
-        });
-
-        if (permissionStatus.state === 'denied') {
-          throw new Error('Microphone permission is denied');
-        }
-
         const formData = new FormData();
         formData.append('audio', audioBlob, 'audio.wav');
 
@@ -48,16 +40,14 @@ export default function AudioInput({ isRecording, onTranscription, onRecordingCo
         onTranscription(text);
       } catch (err) {
         console.error('AudioInput: Error in recording/transcription process:', err);
-        setTimeout(() => {
-          onRecordingComplete();
-        }, 100);
+        onRecordingComplete();
+      } finally {
+        onRecordingComplete();
       }
     },
     onError: (error) => {
       console.error('AudioInput: Recording error:', error);
-      setTimeout(() => {
-        onRecordingComplete();
-      }, 100);
+      onRecordingComplete();
     },
     onEncoderLoaded: () => {
       console.log('AudioInput: Encoder loaded and ready');
@@ -65,36 +55,12 @@ export default function AudioInput({ isRecording, onTranscription, onRecordingCo
   });
 
   useEffect(() => {
-    let mounted = true;
-
-    const handleRecording = async () => {
-      if (isRecording && mounted) {
-        try {
-          const permissionStatus = await navigator.permissions.query({
-            name: 'microphone' as PermissionName
-          });
-
-          if (permissionStatus.state === 'granted') {
-            await startRecording();
-          } else {
-            throw new Error('Microphone permission not granted');
-          }
-        } catch (error) {
-          console.error('Failed to start recording:', error);
-          onRecordingComplete();
-        }
-      } else if (mounted) {
-        stopRecording();
-      }
-    };
-
-    handleRecording();
-
-    return () => {
-      mounted = false;
+    if (isRecording) {
+      startRecording();
+    } else {
       stopRecording();
-    };
-  }, [isRecording, startRecording, stopRecording, onRecordingComplete]);
+    }
+  }, [isRecording]);
 
   return null;
 } 

@@ -11,10 +11,6 @@ export function useOpenAIStream<T>() {
     setError(null);
     setMessages([]);
 
-    console.log("Stream Hook: Starting request", {
-      timestamp: new Date().toISOString(),
-    });
-
     try {
       const response = await fetch("/api/openai/stream", {
         method: "POST",
@@ -24,43 +20,18 @@ export function useOpenAIStream<T>() {
         body: JSON.stringify({ prompt }),
       });
 
-      if (!response.ok) {
-        console.error("Stream Hook: Request failed", {
-          status: response.status,
-          statusText: response.statusText,
-        });
-        throw new Error("Stream request failed");
-      }
-
-      console.log("Stream Hook: Got response, starting to read");
+      if (!response.ok) throw new Error("Stream request failed");
 
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let accumulatedText = "";
-      let chunkCount = 0;
 
       while (true) {
         const { done, value } = await reader!.read();
-        if (done) {
-          console.log("Stream Hook: Stream complete", {
-            totalChunks: chunkCount,
-            finalLength: accumulatedText.length,
-            timestamp: new Date().toISOString(),
-          });
-          break;
-        }
+        if (done) break;
 
         const chunk = decoder.decode(value);
         accumulatedText += chunk;
-        chunkCount++;
-
-        if (chunkCount % 10 === 0) {
-          // Log every 10 chunks
-          console.log("Stream Hook: Reading progress", {
-            chunksRead: chunkCount,
-            currentLength: accumulatedText.length,
-          });
-        }
 
         setMessages([
           {
@@ -74,11 +45,8 @@ export function useOpenAIStream<T>() {
         confidence: 1,
       } as T);
     } catch (err) {
-      console.error("Stream Hook: Error", {
-        error: err instanceof Error ? err.message : String(err),
-        timestamp: new Date().toISOString(),
-      });
       setError("Error generating response");
+      console.error("Streaming error:", err);
     } finally {
       setLoading(false);
     }
