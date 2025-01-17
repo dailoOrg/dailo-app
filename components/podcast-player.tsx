@@ -7,6 +7,7 @@ import { Slider } from "@/components/ui/slider"
 import { podcastQAStreamPrompt } from '@/prompts/podcastQAStreamPrompt'
 import AudioInput from './audio/AudioInput'
 import StreamingAudioOutput from './audio/StreamingAudioOutput'
+import { useWebAudioRecorder } from '@/hooks/useWebAudioRecorder'
 
 interface PodcastPlayerProps {
   title: string;
@@ -55,6 +56,47 @@ export function PodcastPlayer({
   const [hasPlayedResponse, setHasPlayedResponse] = useState(false);
   const [currentStream, setCurrentStream] = useState<ReadableStream<Uint8Array> | null>(null);
 
+  // Add the web audio recorder hook
+  const { startRecording, stopRecording, isRecording: isAudioRecording } = useWebAudioRecorder({
+    onRecordingComplete: async (audioBlob: Blob) => {
+      try {
+        console.log('PodcastPlayer: Got recording blob', {
+          size: audioBlob.size,
+          type: audioBlob.type
+        });
+
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'audio.wav');
+
+        console.log('PodcastPlayer: Sending to transcription API...');
+        const response = await fetch('/api/transcribe', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Transcription failed: ${response.status}`);
+        }
+
+        const { text } = await response.json();
+        console.log('PodcastPlayer: Received transcription:', { text });
+
+        if (!text?.trim()) {
+          throw new Error('Empty transcription received');
+        }
+
+        handleTranscription(text);
+      } catch (err) {
+        console.error('PodcastPlayer: Error in recording/transcription process:', err);
+        handleRecordingComplete();
+      }
+    },
+    onError: (error) => {
+      console.error('PodcastPlayer: Recording error:', error);
+      handleRecordingComplete();
+    }
+  });
+
   // Update handlers to manage state transitions
   const togglePlayPause = () => {
     if (audioRef.current) {
@@ -92,8 +134,8 @@ export function PodcastPlayer({
   }
 
   const handleAskClick = () => {
-    if (isRecording) {
-      setIsRecording(false);
+    if (isAudioRecording) {
+      stopRecording();
       setPlayerState(PlayerState.WAITING_FOR_RESPONSE);
     } else {
       if (audioRef.current) {
@@ -104,11 +146,10 @@ export function PodcastPlayer({
       setCurrentStream(null);
       setTranscribedText('');
 
-      // Show preparing state
       setPlayerState(PlayerState.PREPARING_RECORDING);
 
-      // Instead of delaying, start getUserMedia right away to satisfy iOS's requirement
-      setIsRecording(true);
+      // Direct call to startRecording instead of setting isRecording state
+      startRecording();
       setPlayerState(PlayerState.RECORDING_QUESTION);
     }
   };
@@ -354,11 +395,6 @@ export function PodcastPlayer({
 
       {/* Hidden but functional audio components */}
       <div className="hidden">
-        <AudioInput
-          isRecording={isRecording}
-          onTranscription={handleTranscription}
-          onRecordingComplete={handleRecordingComplete}
-        />
         {showAiResponse && (
           <StreamingAudioOutput
             stream={currentStream}
