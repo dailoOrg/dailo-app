@@ -44,24 +44,27 @@ export function useWebAudioRecorder({
   // Cleanup function
   const cleanup = useCallback(async () => {
     if (cleanupInProgressRef.current) {
-      console.log('Cleanup already in progress, waiting...');
+      console.log("Cleanup already in progress, waiting...");
       return;
     }
 
     cleanupInProgressRef.current = true;
-    console.log('Starting cleanup of recording resources...');
+    console.log("Starting cleanup of recording resources...");
 
     try {
       // Stop the MediaRecorder if it exists
-      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-        console.log('Stopping MediaRecorder...');
+      if (
+        mediaRecorderRef.current &&
+        mediaRecorderRef.current.state !== "inactive"
+      ) {
+        console.log("Stopping MediaRecorder...");
         mediaRecorderRef.current.stop();
       }
 
       // Stop all tracks in the MediaStream
       if (streamRef.current) {
-        console.log('Stopping MediaStream tracks...');
-        streamRef.current.getTracks().forEach(track => {
+        console.log("Stopping MediaStream tracks...");
+        streamRef.current.getTracks().forEach((track) => {
           track.stop();
           streamRef.current?.removeTrack(track);
         });
@@ -71,12 +74,11 @@ export function useWebAudioRecorder({
       mediaRecorderRef.current = null;
       streamRef.current = null;
       chunksRef.current = [];
-      
     } catch (error) {
-      console.error('Error during cleanup:', error);
+      console.error("Error during cleanup:", error);
     } finally {
       cleanupInProgressRef.current = false;
-      console.log('Cleanup completed');
+      console.log("Cleanup completed");
     }
   }, []);
 
@@ -87,15 +89,39 @@ export function useWebAudioRecorder({
       await cleanup();
 
       console.log("Starting recording...");
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          channelCount: 1,
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-          sampleRate: 48000,
-          sampleSize: 16,
-        },
+      const stream = await navigator.mediaDevices
+        .getUserMedia({
+          audio: {
+            channelCount: 1,
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+            sampleRate: 48000,
+            sampleSize: 16,
+          },
+        })
+        .catch((err) => {
+          // Log detailed getUserMedia errors
+          console.error("getUserMedia error:", {
+            name: err.name,
+            message: err.message,
+            constraint: err.constraint,
+            stack: err.stack,
+          });
+          throw err;
+        });
+
+      // Log stream details
+      console.log("Got media stream:", {
+        id: stream.id,
+        active: stream.active,
+        tracks: stream.getAudioTracks().map((track) => ({
+          label: track.label,
+          enabled: track.enabled,
+          muted: track.muted,
+          readyState: track.readyState,
+          settings: track.getSettings(),
+        })),
       });
 
       streamRef.current = stream;
@@ -115,9 +141,14 @@ export function useWebAudioRecorder({
           error,
           type: event.type,
           message: error?.message || "Unknown error",
+          state: mediaRecorder.state,
+          mimeType: mediaRecorder.mimeType,
+          stack: error?.stack,
         });
         cleanup();
-        onError(new Error(`Recording failed: ${error?.message || "Unknown error"}`));
+        onError(
+          new Error(`Recording failed: ${error?.message || "Unknown error"}`)
+        );
       };
 
       mediaRecorder.ondataavailable = (e) => {
@@ -127,7 +158,23 @@ export function useWebAudioRecorder({
       };
 
       mediaRecorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, mimeType ? { type: mimeType } : undefined);
+        if (chunksRef.current.length === 0) {
+          console.error("No audio data collected during recording");
+          onError(new Error("No audio data collected"));
+          return;
+        }
+
+        const blob = new Blob(
+          chunksRef.current,
+          mimeType ? { type: mimeType } : undefined
+        );
+
+        if (blob.size === 0) {
+          console.error("Created blob is empty");
+          onError(new Error("Created audio blob is empty"));
+          return;
+        }
+
         cleanup().then(() => {
           onRecordingComplete(blob);
           setIsRecording(false);
@@ -137,18 +184,27 @@ export function useWebAudioRecorder({
       mediaRecorderRef.current = mediaRecorder;
       mediaRecorder.start(1000);
       setIsRecording(true);
-
     } catch (error) {
       await cleanup();
-      console.error("Recording error:", error);
-      onError(error instanceof Error ? error : new Error('Failed to start recording'));
+      console.error("Recording error:", {
+        error,
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : "No stack trace",
+        type: error?.constructor?.name || typeof error,
+      });
+      onError(
+        error instanceof Error ? error : new Error("Failed to start recording")
+      );
     }
   };
 
   // Enhanced stopRecording
   const stopRecording = useCallback(() => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-      console.log('Stopping recording...');
+    if (
+      mediaRecorderRef.current &&
+      mediaRecorderRef.current.state !== "inactive"
+    ) {
+      console.log("Stopping recording...");
       mediaRecorderRef.current.stop();
     }
   }, []);

@@ -67,10 +67,17 @@ export function PodcastPlayer({
   const { startRecording, stopRecording, isRecording: isAudioRecording } = useWebAudioRecorder({
     onRecordingComplete: async (audioBlob: Blob) => {
       try {
+        // Add more detailed logging about the blob
         console.log('PodcastPlayer: Got recording blob', {
           size: audioBlob.size,
-          type: audioBlob.type
+          type: audioBlob.type,
+          isEmpty: audioBlob.size === 0,
+          timestamp: new Date().toISOString()
         });
+
+        if (audioBlob.size === 0) {
+          throw new Error('Empty audio blob received');
+        }
 
         const formData = new FormData();
         formData.append('audio', audioBlob, 'audio.wav');
@@ -81,27 +88,47 @@ export function PodcastPlayer({
           body: formData,
         });
 
+        // Log the response status and headers
+        console.log('PodcastPlayer: Transcription API response:', {
+          status: response.status,
+          statusText: response.statusText,
+          headers: Object.fromEntries(response.headers.entries())
+        });
+
         if (!response.ok) {
-          throw new Error(`Transcription failed: ${response.status}`);
+          const errorText = await response.text().catch(() => 'No error details available');
+          throw new Error(`Transcription failed: ${response.status} - ${errorText}`);
         }
 
-        const { text } = await response.json();
-        console.log('PodcastPlayer: Received transcription:', { text });
+        const data = await response.json();
+        console.log('PodcastPlayer: Received transcription data:', data);
 
-        if (!text?.trim()) {
-          throw new Error('Empty transcription received');
+        if (!data.text?.trim()) {
+          throw new Error('Empty transcription received from API');
         }
 
-        handleTranscription(text);
+        handleTranscription(data.text);
       } catch (err) {
-        console.error('PodcastPlayer: Error in recording/transcription process:', err);
+        // Improve error logging
+        console.error('PodcastPlayer: Error in recording/transcription process:', {
+          error: err,
+          message: err instanceof Error ? err.message : String(err),
+          stack: err instanceof Error ? err.stack : 'No stack trace',
+          type: err?.constructor?.name || typeof err
+        });
         handleRecordingComplete();
       } finally {
         setIsProcessingRecording(false);
       }
     },
     onError: (error) => {
-      console.error('PodcastPlayer: Recording error:', error);
+      // Improve error logging for recorder errors
+      console.error('PodcastPlayer: Recording error:', {
+        error,
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
       handleRecordingComplete();
       setIsProcessingRecording(false);
     }
@@ -216,12 +243,21 @@ export function PodcastPlayer({
   };
 
   const handleTranscription = async (text: string) => {
-    setTranscribedText(text);
-    setPlayerState(PlayerState.WAITING_FOR_RESPONSE);
+    try {
+      setTranscribedText(text);
+      setPlayerState(PlayerState.WAITING_FOR_RESPONSE);
 
-    if (text?.trim()) {
-      await handleAskQuestion(text);
-    } else {
+      if (text?.trim()) {
+        await handleAskQuestion(text);
+      } else {
+        setPlayerState(PlayerState.INITIAL);
+      }
+    } catch (err) {
+      console.error('PodcastPlayer: Error in handleTranscription:', {
+        error: err,
+        message: err instanceof Error ? err.message : String(err),
+        text: text
+      });
       setPlayerState(PlayerState.INITIAL);
     }
   };
