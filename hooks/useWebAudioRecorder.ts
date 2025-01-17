@@ -91,10 +91,11 @@ export function useWebAudioRecorder({
   // Enhanced startRecording
   const startRecording = async () => {
     try {
-      // Ensure previous recording is cleaned up
+      // Ensure cleanup is complete before starting
       await cleanup();
 
-      console.log("Starting recording...");
+      // Request permissions directly in response to user action
+      console.log("Requesting microphone access...");
       const stream = await navigator.mediaDevices
         .getUserMedia({
           audio: {
@@ -107,6 +108,7 @@ export function useWebAudioRecorder({
           },
         })
         .catch((err) => {
+          // Log detailed getUserMedia errors
           console.error("getUserMedia error:", {
             name: err.name,
             message: err.message,
@@ -115,6 +117,11 @@ export function useWebAudioRecorder({
           });
           throw err;
         });
+
+      // Verify stream is active before proceeding
+      if (!stream.active) {
+        throw new Error("Stream not active after getUserMedia");
+      }
 
       // Store stream before creating MediaRecorder
       streamRef.current = stream;
@@ -193,6 +200,7 @@ export function useWebAudioRecorder({
       onError(
         error instanceof Error ? error : new Error("Failed to start recording")
       );
+      throw error; // Re-throw to allow handling in component
     }
   };
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { Play, Pause, SkipBack, SkipForward, Volume2, Mic, Circle, X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
@@ -170,37 +170,68 @@ export function PodcastPlayer({
     }
   }
 
+  // Split permission check into its own function
+  const checkMicrophonePermission = useCallback(async () => {
+    try {
+      // Only proceed if mediaDevices is available
+      if (!navigator?.mediaDevices?.getUserMedia) {
+        console.log('MediaDevices not supported');
+        setPermissionChecked(true);
+        return;
+      }
+
+      // Request with minimal constraints
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: false
+      });
+
+      // Immediately stop all tracks
+      stream.getTracks().forEach(track => {
+        track.stop();
+        stream.removeTrack(track);
+      });
+
+      console.log('Microphone permission granted');
+      setPermissionChecked(true);
+    } catch (error: unknown) {
+      console.log('Microphone permission check failed:', {
+        error,
+        name: error instanceof Error ? error.name : 'Unknown error',
+        message: error instanceof Error ? error.message : String(error)
+      });
+      setPermissionChecked(true);
+    }
+  }, []);
+
+  // Modify the mount effect to be more precise
   useEffect(() => {
     isMountedRef.current = true;
 
-    // Check permissions on mount
-    const checkPermissions = async () => {
-      try {
-        // Try to get a stream and immediately close it
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach(track => track.stop());
-        setPermissionChecked(true);
-      } catch (error) {
-        console.log('Initial permission check failed:', error);
-        setPermissionChecked(true);
+    // Don't check permissions immediately on mount
+    // Wait a small delay to ensure component is fully mounted
+    const timer = setTimeout(() => {
+      if (isMountedRef.current) {
+        checkMicrophonePermission();
       }
-    };
-
-    // Only check permissions if the browser supports it
-    if (typeof navigator !== 'undefined' && navigator.mediaDevices) {
-      checkPermissions();
-    }
+    }, 1000);
 
     return () => {
       isMountedRef.current = false;
+      clearTimeout(timer);
     };
-  }, []);
+  }, [checkMicrophonePermission]);
 
-  // Modify handleAskClick to check mounting and permissions
+  // Modify handleAskClick to ensure direct user interaction
   const handleAskClick = async () => {
-    // Don't proceed if component is unmounted or permissions weren't checked
-    if (!isMountedRef.current || !permissionChecked) {
-      console.log('Component not ready or permissions not checked');
+    // If permissions haven't been checked yet, check them now
+    if (!permissionChecked) {
+      console.log('Checking permissions on first click');
+      await checkMicrophonePermission();
+    }
+
+    if (!isMountedRef.current) {
+      console.log('Component not mounted');
       return;
     }
 
@@ -225,15 +256,26 @@ export function PodcastPlayer({
         setCurrentStream(null);
         setTranscribedText('');
 
-        // Wrap in mounted check
+        // Direct user interaction - start recording immediately
+        await startRecording().catch((error: unknown) => {
+          console.error('Start recording failed:', {
+            error,
+            name: error instanceof Error ? error.name : 'Unknown error',
+            message: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : 'No stack trace'
+          });
+          throw error; // Re-throw to be caught by outer try-catch
+        });
+
         if (isMountedRef.current) {
-          await startRecording();
-          if (isMountedRef.current) { // Check again after async operation
-            setPlayerState(PlayerState.RECORDING_QUESTION);
-          }
+          setPlayerState(PlayerState.RECORDING_QUESTION);
         }
-      } catch (error) {
-        console.error('Failed to start recording:', error);
+      } catch (error: unknown) {
+        console.error('Failed to start recording:', {
+          error,
+          name: error instanceof Error ? error.name : 'Unknown error',
+          message: error instanceof Error ? error.message : String(error)
+        });
         if (isMountedRef.current) {
           setPlayerState(PlayerState.INITIAL);
           setIsProcessingRecording(false);
