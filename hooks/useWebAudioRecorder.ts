@@ -41,7 +41,7 @@ export function useWebAudioRecorder({
   const [isRecording, setIsRecording] = useState(false);
   const cleanupInProgressRef = useRef(false);
 
-  // Cleanup function
+  // Improved cleanup function
   const cleanup = useCallback(async () => {
     if (cleanupInProgressRef.current) {
       console.log("Cleanup already in progress, waiting...");
@@ -52,32 +52,38 @@ export function useWebAudioRecorder({
     console.log("Starting cleanup of recording resources...");
 
     try {
-      // Stop the MediaRecorder if it exists
-      if (
-        mediaRecorderRef.current &&
-        mediaRecorderRef.current.state !== "inactive"
-      ) {
-        console.log("Stopping MediaRecorder...");
-        mediaRecorderRef.current.stop();
+      // First stop the MediaRecorder if it's recording
+      if (mediaRecorderRef.current) {
+        if (mediaRecorderRef.current.state === "recording") {
+          console.log("Stopping active MediaRecorder...");
+          mediaRecorderRef.current.stop();
+          // Wait a bit for the stop event to fire
+          await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+        mediaRecorderRef.current = null;
       }
 
-      // Stop all tracks in the MediaStream
+      // Then stop and cleanup the MediaStream
       if (streamRef.current) {
         console.log("Stopping MediaStream tracks...");
-        streamRef.current.getTracks().forEach((track) => {
-          track.stop();
-          streamRef.current?.removeTrack(track);
+        const tracks = streamRef.current.getTracks();
+        tracks.forEach((track) => {
+          try {
+            track.stop();
+          } catch (e) {
+            console.warn("Error stopping track:", e);
+          }
         });
+        streamRef.current = null;
       }
 
-      // Clear references
-      mediaRecorderRef.current = null;
-      streamRef.current = null;
+      // Clear chunks last
       chunksRef.current = [];
     } catch (error) {
       console.error("Error during cleanup:", error);
     } finally {
       cleanupInProgressRef.current = false;
+      setIsRecording(false);
       console.log("Cleanup completed");
     }
   }, []);
@@ -85,7 +91,7 @@ export function useWebAudioRecorder({
   // Enhanced startRecording
   const startRecording = async () => {
     try {
-      // Ensure cleanup is complete before starting
+      // Ensure previous recording is cleaned up
       await cleanup();
 
       console.log("Starting recording...");
@@ -101,7 +107,6 @@ export function useWebAudioRecorder({
           },
         })
         .catch((err) => {
-          // Log detailed getUserMedia errors
           console.error("getUserMedia error:", {
             name: err.name,
             message: err.message,
@@ -111,21 +116,8 @@ export function useWebAudioRecorder({
           throw err;
         });
 
-      // Log stream details
-      console.log("Got media stream:", {
-        id: stream.id,
-        active: stream.active,
-        tracks: stream.getAudioTracks().map((track) => ({
-          label: track.label,
-          enabled: track.enabled,
-          muted: track.muted,
-          readyState: track.readyState,
-          settings: track.getSettings(),
-        })),
-      });
-
+      // Store stream before creating MediaRecorder
       streamRef.current = stream;
-      chunksRef.current = [];
 
       const mimeType = getSupportedMimeType();
       console.log("Using MIME type:", mimeType);
@@ -134,6 +126,16 @@ export function useWebAudioRecorder({
         mimeType,
         audioBitsPerSecond: 128000,
       });
+
+      mediaRecorderRef.current = mediaRecorder;
+      chunksRef.current = [];
+
+      // Set up event handlers before starting
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunksRef.current.push(e.data);
+        }
+      };
 
       mediaRecorder.onerror = (event: Event) => {
         const error = (event as any).error;
@@ -146,42 +148,38 @@ export function useWebAudioRecorder({
           stack: error?.stack,
         });
         cleanup();
-        onError(
-          new Error(`Recording failed: ${error?.message || "Unknown error"}`)
-        );
       };
 
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-          chunksRef.current.push(e.data);
-        }
-      };
-
-      mediaRecorder.onstop = () => {
+      mediaRecorder.onstop = async () => {
+        // Check if we have any data before creating blob
         if (chunksRef.current.length === 0) {
           console.error("No audio data collected during recording");
           onError(new Error("No audio data collected"));
           return;
         }
 
-        const blob = new Blob(
-          chunksRef.current,
-          mimeType ? { type: mimeType } : undefined
-        );
+        try {
+          const blob = new Blob(
+            chunksRef.current,
+            mimeType ? { type: mimeType } : undefined
+          );
 
-        if (blob.size === 0) {
-          console.error("Created blob is empty");
-          onError(new Error("Created audio blob is empty"));
-          return;
-        }
+          if (blob.size === 0) {
+            throw new Error("Created audio blob is empty");
+          }
 
-        cleanup().then(() => {
+          // Call onRecordingComplete before cleanup
           onRecordingComplete(blob);
-          setIsRecording(false);
-        });
+        } catch (error) {
+          console.error("Error processing recording:", error);
+          onError(error instanceof Error ? error : new Error(String(error)));
+        } finally {
+          // Clean up after processing the recording
+          await cleanup();
+        }
       };
 
-      mediaRecorderRef.current = mediaRecorder;
+      // Start recording
       mediaRecorder.start(1000);
       setIsRecording(true);
     } catch (error) {
@@ -198,12 +196,9 @@ export function useWebAudioRecorder({
     }
   };
 
-  // Enhanced stopRecording
+  // Simplified stopRecording that just triggers MediaRecorder stop
   const stopRecording = useCallback(() => {
-    if (
-      mediaRecorderRef.current &&
-      mediaRecorderRef.current.state !== "inactive"
-    ) {
+    if (mediaRecorderRef.current?.state === "recording") {
       console.log("Stopping recording...");
       mediaRecorderRef.current.stop();
     }
