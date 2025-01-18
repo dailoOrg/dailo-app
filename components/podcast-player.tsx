@@ -8,6 +8,7 @@ import { podcastQAStreamPrompt } from '@/prompts/podcastQAStreamPrompt'
 import AudioInput from './audio/AudioInput'
 import StreamingAudioOutput from './audio/StreamingAudioOutput'
 import { useWebAudioRecorder } from '@/hooks/useWebAudioRecorder'
+import { CompatibilityWarning } from './CompatibilityWarning'
 
 interface PodcastPlayerProps {
   title: string;
@@ -56,6 +57,7 @@ export function PodcastPlayer({
   const [hasPlayedResponse, setHasPlayedResponse] = useState(false);
   const [currentStream, setCurrentStream] = useState<ReadableStream<Uint8Array> | null>(null);
   const [isProcessingRecording, setIsProcessingRecording] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
   // Add a ref to track if component is mounted
   const isMountedRef = useRef(false);
@@ -438,7 +440,7 @@ export function PodcastPlayer({
             </Button>
             <Button
               size="icon"
-              onClick={handleAskClick}
+              onClick={handleMicClick}
               className="rounded-full bg-white hover:bg-gray-100"
             >
               <Mic className="h-6 w-6 text-black" />
@@ -459,8 +461,24 @@ export function PodcastPlayer({
     }
   };
 
+  const handleMicClick = () => {
+    const iOSVersion = getiOSVersion();
+    const isSafariBrowser = isSafari();
+
+    if ((iOSVersion !== null && iOSVersion < 18) || isSafariBrowser) {
+      setShowWarning(true);
+      return;
+    }
+
+    handleAskClick();
+  };
+
   return (
     <div className="py-2 md:py-4 bg-black">
+      <CompatibilityWarning
+        isOpen={showWarning}
+        onClose={() => setShowWarning(false)}
+      />
       <div className="flex items-start space-x-2 md:space-x-6">
         {/* Podcast Image */}
         <div className="flex-shrink-0">
