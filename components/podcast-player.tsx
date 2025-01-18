@@ -9,6 +9,7 @@ import AudioInput from './audio/AudioInput'
 import StreamingAudioOutput from './audio/StreamingAudioOutput'
 import { useWebAudioRecorder } from '@/hooks/useWebAudioRecorder'
 import { CompatibilityWarning } from './CompatibilityWarning'
+import { getiOSVersion, isSafari } from '@/utils/browserDetection'
 
 interface PodcastPlayerProps {
   title: string;
@@ -28,12 +29,6 @@ enum PlayerState {
   WAITING_FOR_RESPONSE = 'WAITING_FOR_RESPONSE',
   AI_RESPONDING = 'AI_RESPONDING'
 }
-
-// Add this helper function at the top of the file
-const isSafari = () => {
-  const ua = navigator.userAgent.toLowerCase();
-  return ua.includes('safari') && !ua.includes('chrome');
-};
 
 export function PodcastPlayer({
   title,

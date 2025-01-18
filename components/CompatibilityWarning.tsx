@@ -1,20 +1,10 @@
 import { X } from 'lucide-react';
+import { getiOSVersion, isSafari } from '@/utils/browserDetection';
 
 interface CompatibilityWarningProps {
     isOpen: boolean;
     onClose: () => void;
 }
-
-const getiOSVersion = () => {
-    const userAgent = window.navigator.userAgent;
-    const match = userAgent.match(/OS (\d+)_/);
-    return match ? parseInt(match[1], 10) : null;
-};
-
-const isSafari = () => {
-    const ua = navigator.userAgent.toLowerCase();
-    return ua.includes('safari') && !ua.includes('chrome');
-};
 
 export const CompatibilityWarning = ({ isOpen, onClose }: CompatibilityWarningProps) => {
     if (!isOpen) return null;
