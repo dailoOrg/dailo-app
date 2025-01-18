@@ -11,7 +11,7 @@ interface StreamingAudioOutputProps {
 export default function StreamingAudioOutput({ stream, onComplete }: StreamingAudioOutputProps) {
   const [fullResponse, setFullResponse] = useState<string>('');
   const [isStreamComplete, setIsStreamComplete] = useState(false);
-  
+
   const {
     processStreamChunk,
     isPlaying,
@@ -40,7 +40,7 @@ export default function StreamingAudioOutput({ stream, onComplete }: StreamingAu
         while (!canceled) {
           const { done, value } = await reader.read();
           if (done) break;
-          
+
           const chunk = decoder.decode(value);
           accumulatedText += chunk;
           setFullResponse(accumulatedText);
