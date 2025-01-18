@@ -15,9 +15,9 @@ export const CompatibilityWarning = ({ isOpen, onClose }: CompatibilityWarningPr
     let message = '';
     if (iOSVersion !== null) { // is iOS device
         if (iOSVersion < 18) {
-            message = 'Voice recording requires iOS 18 or later. Please update your device or use a different one.';
+            message = 'Voice recording might not work on iOS versions below 18. You can still try, or update your device for better compatibility.';
         } else if (isSafariBrowser) {
-            message = 'Voice recording is not supported in Safari. Please use Chrome browser.';
+            message = 'Voice recording might not work well in Safari. For best results, please use Chrome browser.';
         }
     }
 
@@ -41,11 +41,17 @@ export const CompatibilityWarning = ({ isOpen, onClose }: CompatibilityWarningPr
                     </div>
                     <div>
                         <h3 className="text-lg font-medium text-gray-900 mb-2">
-                            Browser Compatibility Warning
+                            Compatibility Notice
                         </h3>
                         <p className="text-sm text-gray-600">
                             {message}
                         </p>
+                        <button
+                            onClick={onClose}
+                            className="mt-4 text-sm font-medium text-blue-600 hover:text-blue-500"
+                        >
+                            Continue anyway
+                        </button>
                     </div>
                 </div>
             </div>

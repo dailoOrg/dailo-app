@@ -460,11 +460,12 @@ export function PodcastPlayer({
     const iOSVersion = getiOSVersion();
     const isSafariBrowser = isSafari();
 
+    // Show warning if needed, but continue with recording
     if ((iOSVersion !== null && iOSVersion < 18) || isSafariBrowser) {
       setShowWarning(true);
-      return;
     }
 
+    // Always try to record
     handleAskClick();
   };
 
