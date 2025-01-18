@@ -224,21 +224,9 @@ export function PodcastPlayer({
 
   // Modify handleAskClick to ensure direct user interaction
   const handleAskClick = async () => {
-    // If permissions haven't been checked yet, check them now
     if (!permissionChecked) {
       console.log('Checking permissions on first click');
       await checkMicrophonePermission();
-    }
-
-    if (!isMountedRef.current) {
-      console.log('Component not mounted');
-      return;
-    }
-
-    // Only check isProcessingRecording when starting a new recording
-    if (!isAudioRecording && isProcessingRecording) {
-      console.log('Recording in progress, please wait...');
-      return;
     }
 
     if (isAudioRecording) {
@@ -256,30 +244,12 @@ export function PodcastPlayer({
         setCurrentStream(null);
         setTranscribedText('');
 
-        // Direct user interaction - start recording immediately
-        await startRecording().catch((error: unknown) => {
-          console.error('Start recording failed:', {
-            error,
-            name: error instanceof Error ? error.name : 'Unknown error',
-            message: error instanceof Error ? error.message : String(error),
-            stack: error instanceof Error ? error.stack : 'No stack trace'
-          });
-          throw error; // Re-throw to be caught by outer try-catch
-        });
-
-        if (isMountedRef.current) {
-          setPlayerState(PlayerState.RECORDING_QUESTION);
-        }
-      } catch (error: unknown) {
-        console.error('Failed to start recording:', {
-          error,
-          name: error instanceof Error ? error.name : 'Unknown error',
-          message: error instanceof Error ? error.message : String(error)
-        });
-        if (isMountedRef.current) {
-          setPlayerState(PlayerState.INITIAL);
-          setIsProcessingRecording(false);
-        }
+        await startRecording();
+        setPlayerState(PlayerState.RECORDING_QUESTION);
+      } catch (error) {
+        console.error('Failed to start recording:', error);
+        setPlayerState(PlayerState.INITIAL);
+        setIsProcessingRecording(false);
       }
     }
   };

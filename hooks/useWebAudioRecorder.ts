@@ -91,53 +91,29 @@ export function useWebAudioRecorder({
   // Enhanced startRecording
   const startRecording = async () => {
     try {
-      // Ensure cleanup is complete before starting
       await cleanup();
 
-      // Request permissions directly in response to user action
       console.log("Requesting microphone access...");
-      const stream = await navigator.mediaDevices
-        .getUserMedia({
-          audio: {
-            channelCount: 1,
-            echoCancellation: true,
-            noiseSuppression: true,
-            autoGainControl: true,
-            sampleRate: 48000,
-            sampleSize: 16,
-          },
-        })
-        .catch((err) => {
-          // Log detailed getUserMedia errors
-          console.error("getUserMedia error:", {
-            name: err.name,
-            message: err.message,
-            constraint: err.constraint,
-            stack: err.stack,
-          });
-          throw err;
-        });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          channelCount: 1,
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+          sampleRate: 48000,
+          sampleSize: 16,
+        },
+      });
 
-      // Verify stream is active before proceeding
-      if (!stream.active) {
-        throw new Error("Stream not active after getUserMedia");
-      }
-
-      // Store stream before creating MediaRecorder
       streamRef.current = stream;
-
       const mimeType = getSupportedMimeType();
-      console.log("Using MIME type:", mimeType);
 
       const mediaRecorder = new MediaRecorder(stream, {
         mimeType,
         audioBitsPerSecond: 128000,
       });
 
-      mediaRecorderRef.current = mediaRecorder;
-      chunksRef.current = [];
-
-      // Set up event handlers before starting
+      // Set up handlers
       mediaRecorder.ondataavailable = (e) => {
         if (e.data.size > 0) {
           chunksRef.current.push(e.data);
@@ -186,21 +162,14 @@ export function useWebAudioRecorder({
         }
       };
 
-      // Start recording
+      mediaRecorderRef.current = mediaRecorder;
       mediaRecorder.start(1000);
       setIsRecording(true);
+      return Promise.resolve();
     } catch (error) {
       await cleanup();
-      console.error("Recording error:", {
-        error,
-        message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : "No stack trace",
-        type: error?.constructor?.name || typeof error,
-      });
-      onError(
-        error instanceof Error ? error : new Error("Failed to start recording")
-      );
-      throw error; // Re-throw to allow handling in component
+      console.error("Recording error:", error);
+      throw error;
     }
   };
 
