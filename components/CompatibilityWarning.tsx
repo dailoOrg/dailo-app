@@ -42,14 +42,7 @@ export const CompatibilityWarning = ({ isOpen, onClose }: CompatibilityWarningPr
                     >
                         Open in Chrome
                     </a>
-                    <a
-                        href="https://apps.apple.com/us/app/google-chrome/id535886823"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm font-medium text-blue-600 hover:text-blue-500 block"
-                    >
-                        Download Chrome for iOS
-                    </a>
+                   
                 </div>
             );
         }
