@@ -12,12 +12,46 @@ export const CompatibilityWarning = ({ isOpen, onClose }: CompatibilityWarningPr
     const iOSVersion = getiOSVersion();
     const isSafariBrowser = isSafari();
 
+    // Get current URL to suggest opening in Chrome
+    const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+    const chromeUrl = `googlechrome://${currentUrl.replace(/^https?:\/\//, '')}`;
+
     let message = '';
+    let actionButton = null;
+
     if (iOSVersion !== null) { // is iOS device
         if (iOSVersion < 18) {
             message = 'Voice recording might not work on iOS versions below 18. You can still try, or update your device for better compatibility.';
+            actionButton = (
+                <a
+                    href="https://support.apple.com/en-us/HT204204"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 text-sm font-medium text-blue-600 hover:text-blue-500 block"
+                >
+                    How to update iOS
+                </a>
+            );
         } else if (isSafariBrowser) {
             message = 'Voice recording might not work well in Safari. For best results, please use Chrome browser.';
+            actionButton = (
+                <div className="mt-4 space-y-2">
+                    <a
+                        href={chromeUrl}
+                        className="text-sm font-medium text-blue-600 hover:text-blue-500 block"
+                    >
+                        Open in Chrome
+                    </a>
+                    <a
+                        href="https://apps.apple.com/us/app/google-chrome/id535886823"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-medium text-blue-600 hover:text-blue-500 block"
+                    >
+                        Download Chrome for iOS
+                    </a>
+                </div>
+            );
         }
     }
 
@@ -46,9 +80,10 @@ export const CompatibilityWarning = ({ isOpen, onClose }: CompatibilityWarningPr
                         <p className="text-sm text-gray-600">
                             {message}
                         </p>
+                        {actionButton}
                         <button
                             onClick={onClose}
-                            className="mt-4 text-sm font-medium text-blue-600 hover:text-blue-500"
+                            className="mt-4 text-sm font-medium text-gray-500 hover:text-gray-400 block"
                         >
                             Continue anyway
                         </button>
