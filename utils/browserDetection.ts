@@ -8,8 +8,12 @@ export const getiOSVersion = () => {
 export const isSafari = () => {
   if (typeof window === "undefined") return false;
   const ua = window.navigator.userAgent.toLowerCase();
-  // More specific Safari check - must include 'safari' but not 'chrome' or 'crios' (Chrome on iOS)
+  // Safari check: includes 'safari' but not 'chrome' or 'crios'
+  // Note: Safari on iOS includes 'safari' and 'mobile'
   return (
-    ua.includes("safari") && !ua.includes("chrome") && !ua.includes("crios")
+    ua.includes("safari") &&
+    !ua.includes("chrome") &&
+    !ua.includes("crios") &&
+    (ua.includes("version/") || ua.includes("mobile"))
   );
 };
