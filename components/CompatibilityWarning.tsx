@@ -12,6 +12,15 @@ export const CompatibilityWarning = ({ isOpen, onClose }: CompatibilityWarningPr
     const iOSVersion = getiOSVersion();
     const isSafariBrowser = isSafari();
 
+    // Only show warning if:
+    // 1. iOS version is below 18 (any browser) OR
+    // 2. Using Safari (any device/version)
+    const shouldShowWarning =
+        (iOSVersion !== null && iOSVersion < 18) || // iOS below 18
+        isSafariBrowser; // Any Safari browser
+
+    if (!shouldShowWarning) return null;
+
     // Get current URL to suggest opening in Chrome
     const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
     const chromeUrl = `googlechrome://${currentUrl.replace(/^https?:\/\//, '')}`;
@@ -19,33 +28,20 @@ export const CompatibilityWarning = ({ isOpen, onClose }: CompatibilityWarningPr
     let message = '';
     let actionButton = null;
 
-    if (iOSVersion !== null) { // is iOS device
-        if (iOSVersion < 18) {
-            message = 'Voice recording might not work on iOS versions below 18. You can still try, or update your device for better compatibility.';
-            actionButton = (
+    if (iOSVersion !== null && iOSVersion < 18) {
+        message = 'Voice recording might not work on iOS versions below 18. You can still try, or update your device for better compatibility.';
+    } else if (isSafariBrowser) {
+        message = 'Voice recording might not work well in Safari. For best results, please use Chrome browser.';
+        actionButton = (
+            <div className="mt-4 space-y-2">
                 <a
-                    href="https://support.apple.com/en-us/HT204204"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 text-sm font-medium text-blue-600 hover:text-blue-500 block"
+                    href={chromeUrl}
+                    className="text-sm font-medium text-blue-600 hover:text-blue-500 block"
                 >
-                    How to update iOS
+                    Open in Chrome
                 </a>
-            );
-        } else if (isSafariBrowser) {
-            message = 'Voice recording might not work well in Safari. For best results, please use Chrome browser.';
-            actionButton = (
-                <div className="mt-4 space-y-2">
-                    <a
-                        href={chromeUrl}
-                        className="text-sm font-medium text-blue-600 hover:text-blue-500 block"
-                    >
-                        Open in Chrome
-                    </a>
-                   
-                </div>
-            );
-        }
+            </div>
+        );
     }
 
     if (!message) return null;
